@@ -8,7 +8,7 @@
 <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors, Alexey Golyagin">
 <meta name="docsearch:language" content="ru">
 <meta name="docsearch:version" content="5.0">
-<title>Бесплатный стартовый bootstrap 5 шаблон</title>
+<title>База актов АО"ПТП"Медтехника"</title>
 <!-- Bootstrap core CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
 <link rel="stylesheet" href="https://bootstrap5.ru/css/docs.css">
@@ -22,7 +22,7 @@
 <meta name="theme-color" content="#7952b3">
 <!-- Facebook -->
 <meta property="og:url" content="https://bootstrap5.ru/examples/starter-template">
-<meta property="og:title" content="Бесплатный стартовый bootstrap 5 шаблон">
+<meta property="og:title" content="База актов">
 <meta property="og:description" content="Ничего, кроме основ: скомпилированный CSS и JavaScript.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://bootstrap5.ru/img/examples/starter-template.png">
@@ -50,7 +50,7 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">Денис Монахов</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -60,18 +60,19 @@
         <li class="nav-item active">
           <a class="nav-link" aria-current="page" href="#">Главная</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Ссылка</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-expanded="false">Фильтр</a>
+          <ul class="dropdown-menu" aria-labelledby="dropdown01">
+            <li><a class="dropdown-item" href="#">ЛПУ</a></li>
+            <li><a class="dropdown-item" href="#">Дата</a></li>
+          </ul>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-expanded="false">Выпадающий список</a>
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-expanded="false">Создать новый акт</a>
           <ul class="dropdown-menu" aria-labelledby="dropdown01">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
+            <li><a class="dropdown-item" href="#">Акт технического состояния</a></li>
+            <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
           </ul>
         </li>
       </ul>
@@ -84,40 +85,52 @@
 </nav>
 
 <main class="container">
-    
+
+  <div class="starter-template text-center py-5 px-3">
+  <h1>АО "ПТП"Медтехника"</h1>
+  <p class="lead">База оформленных документов</p>
+</div>
+
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">№</th>
+            <th scope="col">Название</th>
+            <th scope="col">ЛПУ</th>
+            <th scope="col">Аппарат</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Статус</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <td>АктТ-12122024-987654</td>
+            <td>ГАУЗ СО ГБ№24</td>
+            <td>Парус</td>
+            <td>12-12-2024</td>
+            <td>готов</td>
           </tr>
           <tr>
             <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
+            <td>АктВ-15122024-897</td>
+            <td>ГАУЗ СО ГБ№36</td>
+            <td>СпектрАП</td>
+            <td>15-12-2024</td>
+            <td>готов</td>
           </tr>
           <tr>
             <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
+            <td>АктТ-08032025-12345</td>
+            <td>ГАУЗ СО ГБ№24</td>
+            <td>Маммоскан</td>
+            <td>08-03-2025</td>
+            <td>доработка</td>
+            
           </tr>
         </tbody>
       </table>
-    <div class="starter-template text-center py-5 px-3">
-    <h1>Начальный шаблон Bootstrap</h1>
-    <p class="lead">Используйте этот документ как способ быстро начать любой новый проект. Все, что вы получаете, - это текст и в основном простой HTML-документ.</p>
-</div>
+
 
 </main><!-- /.container --><script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
