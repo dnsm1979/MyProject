@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru" prefix="og: http://ogp.me/ns#">
   <head>
@@ -8,7 +10,67 @@
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Денис Монахов</a>
+        <div class="btn-group">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Денис Монахов</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Администрирование</a></li>
+                  <li><a class="dropdown-item" href="#">Выход</a></li>
+                </ul>
+              </li>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Главная</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Создать новый акт</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
+                <li><a class="dropdown-item" href="#">Акт технического состояния</a></li>
+                <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Фильтр</a>
+              <div class="dropdown-menu">
+                <form class="px-4 py-3">
+                  <div class="form-floating">
+                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                      <option selected>ЛПУ</option>
+                      <option value="1">ГАУЗ СО ГБ№24</option>
+                      <option value="2">ГАУЗ СО ГБ№36</option>
+                      <option value="3">ГАУЗ СО ГБ№7</option>
+                    </select>
+
+                  </div>
+                  <div class="mb-6">
+                      <label for="date">Выберите дату от</label>
+                      <input type="date" id="date">
+                      <label for="date">до</label>
+                      <input type="date" id="date">
+                  </div>
+                  <div class="mb-3">
+
+                  </div>
+                  <button type="submit" class="btn btn-primary">Применить</button>
+                </form>
+
+              </div>
+            </li>
+
+          </ul>
+          {% comment %} <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Денис Монахов
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Действие</a></li>
+            <li><a class="dropdown-item" href="#">Другое действие</a></li>
+            <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
+          </ul>
+        </div> {% endcomment %}
+        {% comment %} <a class="navbar-brand" href="#">Денис Монахов</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -19,14 +81,36 @@
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> {% endcomment %}
+
+        {% comment %} <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Фильтр
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Действие</a></li>
+            <li><a class="dropdown-item" href="#">Другое действие</a></li>
+            <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Создать новый акт
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
+            <li><a class="dropdown-item" href="#">Акт технического состояния</a></li>
+            <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
+          </ul>
+        </div>
+
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav mr-auto mb-2 mb-md-0">
             <li class="nav-item active">
               <a class="nav-link" aria-current="page" href="#">Главная</a>
-            </li>
-            <li class="nav-item dropdown">
+            </li> {% endcomment %}
+            {% comment %} <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -65,7 +149,7 @@
                 </li>
               </ul>
             </li>
-          </ul>
+          </ul> {% endcomment %}
           <form class="d-flex justify-content-sm-end">
             <input
               class="form-control mr-2"
@@ -75,13 +159,15 @@
             />
             <button class="btn btn-outline-success" type="submit">ОК</button>
           </form>
+          
         </div>
       </div>
+
     </nav>
 
     <main class="container">
       <div class="starter-template text-center py-5 px-3">
-        <h1>АО "ПТП"Медтехника"</h1>
+        <img src="{% static '\images\1.png' %}" class="img-fluid" alt="logo">
         <p class="lead">База оформленных документов</p>
       </div>
 
