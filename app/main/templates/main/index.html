@@ -1,223 +1,51 @@
+{% extends "base.html" %}
 {% load static %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Название</th>
+      <th scope="col">ЛПУ</th>
+      <th scope="col">Аппарат</th>
+      <th scope="col">Дата</th>
+      <th scope="col">Статус</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>АктТ-12122024-987654</td>
+      <td>ГАУЗ СО ГБ№24</td>
+      <td>Парус</td>
+      <td>12-12-2024</td>
+      <td>готов</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>АктВ-15122024-897</td>
+      <td>ГАУЗ СО ГБ№36</td>
+      <td>СпектрАП</td>
+      <td>15-12-2024</td>
+      <td>готов</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>АктТ-08032025-12345</td>
+      <td>ГАУЗ СО ГБ№24</td>
+      <td>Маммоскан</td>
+      <td>08-03-2025</td>
+      <td>доработка</td>
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td>Отчет-08032025-12345</td>
+      <td>ГАУЗ СО ГБ№24</td>
+      <td>Маммоскан</td>
+      <td>08-03-2025</td>
+      <td>доработка</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock  %}
 
-<!DOCTYPE html>
-<html lang="ru" prefix="og: http://ogp.me/ns#">
-  <head>
-    {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %} 
-   
-  </head>
- 
-  <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <div class="container-fluid">
-        <div class="btn-group">
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Денис Монахов</a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Администрирование</a></li>
-                  <li><a class="dropdown-item" href="#">Выход</a></li>
-                </ul>
-              </li>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Главная</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Создать новый акт</a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
-                <li><a class="dropdown-item" href="#">Акт технического состояния</a></li>
-                <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Фильтр</a>
-              <div class="dropdown-menu">
-                <form class="px-4 py-3">
-                  <div class="form-floating">
-                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                      <option selected>ЛПУ</option>
-                      <option value="1">ГАУЗ СО ГБ№24</option>
-                      <option value="2">ГАУЗ СО ГБ№36</option>
-                      <option value="3">ГАУЗ СО ГБ№7</option>
-                    </select>
-
-                  </div>
-                  <div class="mb-6">
-                      <label for="date">Выберите дату от</label>
-                      <input type="date" id="date">
-                      <label for="date">до</label>
-                      <input type="date" id="date">
-                  </div>
-                  <div class="mb-3">
-
-                  </div>
-                  <button type="submit" class="btn btn-primary">Применить</button>
-                </form>
-
-              </div>
-            </li>
-
-          </ul>
-          {% comment %} <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Денис Монахов
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Действие</a></li>
-            <li><a class="dropdown-item" href="#">Другое действие</a></li>
-            <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
-          </ul>
-        </div> {% endcomment %}
-        {% comment %} <a class="navbar-brand" href="#">Денис Монахов</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarsExampleDefault"
-          aria-controls="navbarsExampleDefault"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button> {% endcomment %}
-
-        {% comment %} <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Фильтр
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Действие</a></li>
-            <li><a class="dropdown-item" href="#">Другое действие</a></li>
-            <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
-          </ul>
-        </div>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Создать новый акт
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
-            <li><a class="dropdown-item" href="#">Акт технического состояния</a></li>
-            <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
-          </ul>
-        </div>
-
-
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-          <ul class="navbar-nav mr-auto mb-2 mb-md-0">
-            <li class="nav-item active">
-              <a class="nav-link" aria-current="page" href="#">Главная</a>
-            </li> {% endcomment %}
-            {% comment %} <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="dropdown01"
-                data-toggle="dropdown"
-                aria-expanded="false"
-                >Фильтр</a
-              >
-              <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                <li><a class="dropdown-item" href="#">ЛПУ</a></li>
-                <li><a class="dropdown-item" href="#">Дата</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="dropdown01"
-                data-toggle="dropdown"
-                aria-expanded="false"
-                >Создать новый акт</a
-              >
-              <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                <li>
-                  <a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"
-                    >Акт технического состояния</a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#"
-                    >Отчет о выполненой работе</a
-                  >
-                </li>
-              </ul>
-            </li>
-          </ul> {% endcomment %}
-          <form class="d-flex justify-content-sm-end">
-            <input
-              class="form-control mr-2"
-              type="search"
-              placeholder="Поиск"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">ОК</button>
-          </form>
-          
-        </div>
-      </div>
-
-    </nav>
-
-    <main class="container">
-      <div class="starter-template text-center py-5 px-3">
-        <img src="{% static '\images\1.png' %}" class="img-fluid" alt="logo">
-        <p class="lead">База оформленных документов</p>
-      </div>
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">№</th>
-            <th scope="col">Название</th>
-            <th scope="col">ЛПУ</th>
-            <th scope="col">Аппарат</th>
-            <th scope="col">Дата</th>
-            <th scope="col">Статус</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>АктТ-12122024-987654</td>
-            <td>ГАУЗ СО ГБ№24</td>
-            <td>Парус</td>
-            <td>12-12-2024</td>
-            <td>готов</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>АктВ-15122024-897</td>
-            <td>ГАУЗ СО ГБ№36</td>
-            <td>СпектрАП</td>
-            <td>15-12-2024</td>
-            <td>готов</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>АктТ-08032025-12345</td>
-            <td>ГАУЗ СО ГБ№24</td>
-            <td>Маммоскан</td>
-            <td>08-03-2025</td>
-            <td>доработка</td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td>Отчет-08032025-12345</td>
-            <td>ГАУЗ СО ГБ№24</td>
-            <td>Маммоскан</td>
-            <td>08-03-2025</td>
-            <td>доработка</td>
-          </tr>
-        </tbody>
-      </table>
-    </main>
-    
-  </body>
-</html>

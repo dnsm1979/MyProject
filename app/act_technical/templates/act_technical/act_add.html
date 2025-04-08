@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<form>
+    <div class="mb-3">
+
+
+          <label for="date">Выберите дату</label>
+          <input type="date" id="date">
+    </div>
+    <div class="input-group mb-3">
+      <label for="exampleDataList" class="form-label">Выберете ЛПУ</label>
+      <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Введите для поиска...">
+      <datalist id="datalistOptions">
+        <option value="ГАУЗ СО ГБ№24">
+        <option value="ГАУЗ СО ГБ№36">
+        <option value="ГАУЗ СО ГБ№7">
+        <option value="ГАУЗ СО ГБ№3">
+        <option value="ГАУЗ СО ГБ№2">
+      </datalist>
+          
+          <button type="submit" class="btn btn-primary">Новое ЛПУ</button>
+        
+    </div>
+    <div class="input-group mb-3">
+        <label for="exampleDataList" class="form-label">Выберете оборудование  </label>
+        <input class="form-control" list="datalistOptions2" id="exampleDataList2" placeholder="Введите для поиска...">
+        <datalist id="datalistOptions2">
+          <option value="Парус">
+          <option value="СпектрАП">
+          <option value="Маммоскан">
+          <option value="Диаком">
+          <option value="Универс">
+        </datalist>
+          <button type="submit" class="btn btn-primary">Новое оборудование</button>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">При проверке оборудования выявляно: </label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Вероятные причины:</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Заключение:</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+      </div>
+    <button type="submit" class="btn btn-primary">Создать</button>
+    <button type="submit" class="btn btn-primary">Сохранить черновик</button>
+  </form>
+{% endblock  %}
