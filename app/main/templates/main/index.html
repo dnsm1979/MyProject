@@ -1,6 +1,61 @@
 {% extends "base.html" %}
 {% load static %}
+{% block body %}
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Создать новый акт</a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
+    <li><a class="dropdown-item" href="{% url "act_technical:act_add" %}">Акт технического состояния</a></li>
+    <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Фильтр</a>
+  <div class="dropdown-menu">
+    <form class="px-4 py-3">
+      <div class="form-floating">
+        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+          <option selected>ЛПУ</option>
+          <option value="1">ГАУЗ СО ГБ№24</option>
+          <option value="2">ГАУЗ СО ГБ№36</option>
+          <option value="3">ГАУЗ СО ГБ№7</option>
+        </select>
+
+      </div>
+      <div class="mb-6">
+          <label for="date">Выберите дату от</label>
+          <input type="date" id="date">
+          <label for="date">до</label>
+          <input type="date" id="date">
+      </div>
+      <div class="mb-3">
+
+      </div>
+      <button type="submit" class="btn btn-primary">Применить</button>
+    </form>
+
+  </div>
+</li>
+</ul>
+          
+<form class="d-flex justify-content-sm-end">
+  <input
+    class="form-control mr-2"
+    type="search"
+    placeholder="Поиск"
+    aria-label="Search"
+  />
+  <button class="btn btn-outline-success" type="submit">ОК</button>
+</form>
+{% endblock  %}
+
 {% block content %}
+<div class="starter-template text-center py-5 px-3">
+  <img src="{% static '\images\1.png' %}" class="img-fluid" alt="logo">
+  <p class="lead">База оформленных документов</p>
+</div>
+
 <table class="table">
   <thead>
     <tr>
@@ -23,7 +78,7 @@
     </tr>
     <tr>
       <th scope="row">2</th>
-      <td>АктВ-15122024-897</td>
+      <td><a class="nav-link" href="{% url "act_technical:act_change" %}">АктВ-15122024-897</a></td>
       <td>ГАУЗ СО ГБ№36</td>
       <td>СпектрАП</td>
       <td>15-12-2024</td>
