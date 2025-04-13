@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+p{% extends "base.html" %} {% load static %} {% block content %}
 <div class="starter-template text-center py-5 px-3"></div>
 
 <div class="container">
@@ -20,46 +20,233 @@
   <div class="starter-template text-center py-4 px-3"></div>
   <div class="row">
     <div class="col-3">
-      <p class="text-center">г.Екатеринбург</p>
+      <p class="text-center text-decoration-underline">г.Екатеринбург</p>
     </div>
     <div class="col-6"></div>
     <div class="col-3">
-      <p class="text-center">Дата: 20.06.2022</p>
+      <p class="text-center text-decoration-underline">Дата: 20.06.2022</p>
     </div>
   </div>
 
   <div class="row">
     <h4 class="text-center">АКТ № 678</h4>
-    <h6 class="text-center fw-bold">технического состояния медицинской техники</h6>
-  </div>
-  <div class="row">
-    <div class="col-3">
-        <p class="text-start fw-bold">Комиссия в составе:</p>
-    </div>
-  </div>
-  
-  <div class="row">
-  <div class="col-8">
-    <p class="text-start">Представителя сервисного центра:</p> 
-  </div>
-    <div class="col"><p class="text-end fst-italic">Д.С.Монахова</p></div>
-    <div class="row">
-      <div class="col-8">
-        <p class="text-start">Главного инженера сервисного центра:</p>
-      </div>
-      <div class="col"> <p class="text-end fst-italic">Р.В.Амурского</p></div>
+    <h6 class="text-center fw-bold">
+      технического состояния медицинской техники
+    </h6>
   </div>
   <div class="row">
     <div class="col">
-      <p class="text-start">с участием представителя учреждения / владельца                 _______________________________________</p>
+      <p class="text-start fw-bold">Комиссия в составе:</p>
     </div>
-</div>
-<div class="row">
-  <div class="col">
-    <p class="text-start">Проверила техническое состояние Аппарат рентгеновский цифровой на 3 рабочих места. </p>
   </div>
-</div>
-</div>
 
-  {% endblock %}
+  <div class="row">
+    <div class="col-auto">
+      <p class="text-start">Представителя сервисного центра:</p>
+    </div>
+    <div class="col-auto">
+      <p class="text-end fst-italic text-decoration-underline">Д.С.Монахова</p>
+    </div>
+    <div class="row">
+      <div class="col-auto">
+        <p class="text-start">Главного инженера сервисного центра:</p>
+      </div>
+      <div class="col-auto">
+        <p class="text-end fst-italic text-decoration-underline">
+          Р.В.Амурского
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p class="text-start">
+          с участием представителя учреждения / владельца
+          _______________________________________
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p class="text-start">
+          Проверила техническое состояние Аппарат рентгеновский цифровой на 3
+          рабочих места.
+        </p>
+      </div>
+
+      <div class="row">
+        <div class="col-auto">
+          <p class="text-start">Модель:</p>
+        </div>
+        <div class="col-auto">
+          <p class="text-start fst-italic text-decoration-underline">
+            УниКоРД-МТ-Плюс
+          </p>
+        </div>
+        <div class="col-auto">
+          <p class="text-start">заводской номер:</p>
+        </div>
+        <div class="col-auto">
+          <p class="text-start fst-italic text-decoration-underline">
+            УКРП-093-18
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">завод-изготовитель:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">
+              АО «Медицинские технологии Лтд»
+            </p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start">страна:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">
+              Россия
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-auto">
+              <p class="text-start">дата изготовления:</p>
+            </div>
+            <div class="col-auto">
+              <p class="text-start fst-italic text-decoration-underline">
+                2018
+              </p>
+            </div>
+            <div class="col-auto">
+              <p class="text-start">дата продажи:</p>
+            </div>
+            <div class="col-auto">
+              <p class="text-start fst-italic text-decoration-underline">
+                2018
+              </p>
+            </div>
+            <div class="col-auto">
+              <p class="text-start">дата ввода в эксплуатацию:</p>
+            </div>
+            <div class="col-auto">
+              <p class="text-start fst-italic text-decoration-underline">
+                2018
+              </p>
+            </div>
+            <div class="starter-template text-center py-2 px-1"></div>
+            <div class="row">
+              <div class="col">
+                <p class="text-start fw-bold">
+                  При проверке изделия медицинской техники установлено:
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <p class="text-start fst-italic text-decoration-underline">
+                  Оборудование работает в ограниченном режиме, неисправен
+                  механизм кассетодержателя на стойке снимков, не работает
+                  поворотный стол-штатив, не исправен подъемник стола снимков,
+                  не исправность механизма поворота излучателя, не исправность
+                  CR-системы.
+                </p>
+              </div>
+              <div class="starter-template text-center py-2 px-1"></div>
+              <div class="row">
+                <div class="col">
+                  <p class="text-start fw-bold">Заключение комиссии:</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <p class="text-start fst-italic text-decoration-underline">
+                    Оборудование находится в ограниченно рабочем состоянии и
+                    требует ремонт неисправных узлов.
+                  </p>
+                </div>
+                <div class="row" style="font-size: 8px">
+                  <div class="col-12">
+                    <p class="text-start lh-sm">
+                      Отпечатано в 2-х экземплярах:
+                    </p>
+                  </div>
+
+                  <div class="col-12">
+                    <p class="text-start lh-sm">
+                      1. Учреждению /владельцу –1 экз.;
+                    </p>
+                  </div>
+
+                  <div class="col">
+                    <p class="text-start lh-sm">
+                      2. Предприятию технического сервиса –1 экз.;
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-auto">
+                    <p class="text-start">
+                      Представители АО «ПТП «Медтехника»:
+                    </p>
+                  </div>
+                  <div class="col-7">
+                    <p class="text-start">Представитель сервисного центра</p>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-end">_____________</p>
+                  </div>
+                  <div class="col-2">
+                    <p class="text-start fst-italic text-decoration-underline">
+                      Д.С.Монахов
+                    </p>
+                  </div>
+                  <div class="col-7">
+                    <p class="text-end">Главный инженер сервисного центра</p>
+                  </div>
+                  <div class="col-3">
+                    <p class="text-end">_____________</p>
+                  </div>
+                  <div class="col-2">
+                    <p class="text-start fst-italic text-decoration-underline">
+                      Р.В.Амурский
+                    </p>
+                  </div>
+                  <div class="starter-template text-center py-4 px-3"></div>
+                  <div class="row">
+                    <div class="col-auto">
+                      <p class="text-start">
+                        Представители учреждения /владельца:
+                      </p>
+                    </div>
+                    <div class="col-7">
+                      <p class="text-start">__________________________________________</p>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-end">_____________</p>
+                    </div>
+                    <div class="col-2">
+                      <p class="text-start fst-italic text-decoration-underline">
+                        ________________________
+                      </p>
+                    </div>
+                    <div class="col-7">
+                      <p class="text-end">__________________________________________</p>
+                    </div>
+                    <div class="col-3">
+                      <p class="text-end">_____________</p>
+                    </div>
+                    <div class="col-2">
+                      <p class="text-start fst-italic text-decoration-underline">
+                        ________________________
+                      </p>
+                    </div>
+                </div>
+              </div>
+
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

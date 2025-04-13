@@ -1,0 +1,89 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="starter-template text-center py-5 px-3"></div>
+
+<form>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Название:</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="1"
+    ></textarea>
+  </div>
+  <div class="input-group mb-3">
+    <label for="exampleDataList" class="form-label">Модель</label>
+    <input
+      class="form-control"
+      list="datalistOptions"
+      id="exampleDataList"
+      placeholder="Введите для поиска..."
+    />
+    <datalist id="datalistOptions">
+      <option value="УниКоРД-МТ-Плюс"></option>
+      <option value="МАММОСКАН"></option>
+      <option value="УнивеРС"></option>
+      <option value="СпектрАП"></option>
+      <option value="Диаком"></option>
+    </datalist>
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Заводской номер:</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="1"
+    ></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label for="date">Дата изготовления</label>
+    <input type="date" id="date_of_manufacture" />
+  </div>
+  <div class="mb-3">
+    <label for="date">Дата продажи</label>
+    <input type="date" id="date_of_pay" />
+  </div>
+  <div class="mb-3">
+    <label for="date">Дата ввода в эксплуатацию</label>
+    <input type="date" id="date_start" />
+  </div>
+  <div class="input-group mb-3">
+    <label for="exampleDataList" class="form-label">Страна</label>
+    <input
+      class="form-control"
+      list="datalistOptions"
+      id="exampleDataList"
+      placeholder="Введите для поиска..."
+    />
+    <datalist id="datalistOptions">
+      <option value="Россия"></option>
+      <option value="США"></option>
+      <option value="Франция"></option>
+      <option value="Япония"></option>
+      <option value="Беларусия"></option>
+    </datalist>
+  </div>
+  <div class="input-group mb-3">
+    <label for="exampleDataList" class="form-label">Производитель</label>
+    <input
+      class="form-control"
+      list="datalistOptions2"
+      id="exampleDataList2"
+      placeholder="Введите для поиска..."
+    />
+    <datalist id="datalistOptions2">
+      <option value="АО «Медицинские технологии Лтд»"></option>
+      <option value="ЗАО «Рентгенпром»"></option>
+      <option value="GE HealthCare"></option>
+      <option value="ООО «СпектрАп»"></option>
+     <option value="Toshiba Medical"></option>
+    </datalist>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Создать</button>
+</form>
+{% endblock %}

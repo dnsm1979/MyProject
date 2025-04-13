@@ -42,6 +42,8 @@ INSTALLED_APPS = [
 
     'main',
     'act_technical',
+    'cards',
+    
     
 
 ]

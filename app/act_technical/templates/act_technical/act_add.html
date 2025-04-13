@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<div class="starter-template text-center py-5 px-3"></div>
 <form>
     <div class="mb-3">
 
@@ -32,7 +33,8 @@
           <option value="Диаком">
           <option value="Универс">
         </datalist>
-          <button type="submit" class="btn btn-primary">Новое оборудование</button>
+        <a class="btn btn-primary" href="{% url "cards:add_hardware" %}" role="button">Новое оборудование</a>
+          
     </div>
     <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">При проверке оборудования выявляно: </label>
