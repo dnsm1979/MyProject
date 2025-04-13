@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="starter-template text-center py-5 px-3"></div>
+
+<form>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Название:</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="1"
+    ></textarea>
+  </div>
+  <div class="input-group mb-3">
+    <label for="exampleDataList" class="form-label">Город</label>
+    <input
+      class="form-control"
+      list="datalistOptions"
+      id="exampleDataList"
+      placeholder="Введите для поиска..."
+    />
+    <datalist id="datalistOptions">
+      <option value="Екатеринбург"></option>
+      <option value="Арамиль"></option>
+      <option value="Ирбит"></option>
+      <option value="Реж"></option>
+      <option value="Нижневартовск"></option>
+    </datalist>
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Индекс:</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="1"
+    ></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Адрес(улица, строение):</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="1"
+    ></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Телефон:</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="1"
+    ></textarea>
+  </div>
+
+  
+
+  <button type="submit" class="btn btn-primary">Создать</button>
+</form>
+{% endblock %}
