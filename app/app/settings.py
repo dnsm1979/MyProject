@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'main',
     'act_technical',
     'cards',
+    'users',
+
     
     
 
@@ -86,10 +88,15 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Working-AKTs',
+        'USER': 'root',
+        'PASSWORD': 'medtex',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -140,3 +147,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = '/user/login/'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = '/user/login/'
