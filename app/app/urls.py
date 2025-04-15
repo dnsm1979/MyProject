@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('main.urls', namespace='main')),
     path('act-technical/', include('act_technical.urls', namespace='act_technical')),
     path('cards/', include('cards.urls', namespace='cards')),
-    path('user/', include('users.urls', namespace='user')),
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 if settings.DEBUG:
