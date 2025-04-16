@@ -26,6 +26,7 @@ urlpatterns = [
     path('act-technical/', include('act_technical.urls', namespace='act_technical')),
     path('cards/', include('cards.urls', namespace='cards')),
     path('users/', include('users.urls', namespace='users')),
+    path('image_manager/', include('image_manager.urls', namespace='image_manager')),
 ]
 
 if settings.DEBUG:

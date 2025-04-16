@@ -19,7 +19,7 @@ class Info(models.Model):
 class Templates(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название")
     text = models.TextField(null=True, blank=True, verbose_name='Текст шаблона')
-    user = models.ForeignKey(to=User, on_delete=models.SET_DEFAULT, blank=True, null=True, verbose_name="Пользователь", default=None)
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Пользователь", default=None)
 
     class Meta:
         db_table = 'templates'

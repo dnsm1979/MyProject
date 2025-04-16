@@ -9,10 +9,10 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView
 # from carts.models import Cart
-from common.mixins import CacheMixin
+# from common.mixins import CacheMixin
 # from orders.models import Order, OrderItem
 
-from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
+from users.forms import ProfileForm, UserLoginForm
 
 
 class UserLoginView(LoginView):
@@ -51,25 +51,25 @@ class UserLoginView(LoginView):
         return context
     
 
-class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
+class UserProfileView(LoginRequiredMixin, UpdateView):
     template_name = 'users/profile.html'
     form_class = ProfileForm
     success_url = reverse_lazy('users:profile')
 
-    def get_object(self, queryset=None):
-        return self.request.user
+    # def get_object(self, queryset=None):
+    #     return self.request.user
     
-    def form_valid(self, form):
-        messages.success(self.request, "Профайл успешно обновлен")
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     messages.success(self.request, "Профайл успешно обновлен")
+    #     return super().form_valid(form)
     
-    def form_invalid(self, form):
-        messages.error(self.request, "Произошла ошибка")
-        return super().form_invalid(form)
+    # def form_invalid(self, form):
+    #     messages.error(self.request, "Произошла ошибка")
+    #     return super().form_invalid(form)
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Кабинет'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title'] = 'Кабинет'
 
         # Можно вынести сам запрос в отдельный метод этого класса контроллера
         # orders = Order.objects.filter(user=self.request.user).prefetch_related(
@@ -79,8 +79,8 @@ class UserProfileView(LoginRequiredMixin, CacheMixin , UpdateView):
         #         )
         #     ).order_by("-id")
 
-        context['orders'] = self.set_get_cache(orders, f"user_{self.request.user.id}_orders", 60)
-        return context
+        # context['orders'] = self.set_get_cache(orders, f"user_{self.request.user.id}_orders", 60)
+        # return context
     
 @login_required
 def logout(request):

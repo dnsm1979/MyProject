@@ -14,7 +14,7 @@ class CartLPU(models.Model):
     representative_2 = models.CharField(max_length=250, blank=True, null=True, verbose_name="Представитель ЛПУ 2")
     representative_3 = models.CharField(max_length=250, blank=True, null=True, verbose_name="Представитель ЛПУ 3")
     lpu = models.CharField(max_length=150, verbose_name="Владелец")
-    city = models.ForeignKey(to=Info, on_delete=models.CASCADE, verbose_name="Город")
+    city = models.ForeignKey(to=Info, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Город")
 
     class Meta:
         db_table = 'cart_lpu'
@@ -34,8 +34,8 @@ class CartHardware(models.Model):
     year_of_manufacture = models.DateTimeField(verbose_name='Дата производства')
     year_of_sale = models.DateTimeField(verbose_name='Дата продажи')
     commissioning_date = models.DateTimeField(verbose_name='Дата ввода в эксплуатацию')
-    lpu = models.ForeignKey(to=CartLPU, on_delete=models.CASCADE, verbose_name="Владелец")
-    cauntry = models.ForeignKey(to=Info, on_delete=models.CASCADE, verbose_name="Страна")
+    lpu = models.ForeignKey(to=CartLPU, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Владелец")
+    cauntry = models.ForeignKey(to=Info, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Страна")
 
     class Meta:
         db_table = 'cart_hardware'
