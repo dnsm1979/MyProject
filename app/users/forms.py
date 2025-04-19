@@ -14,6 +14,35 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField()
 
 
+
+class UserRegistrationForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "username",
+            "surname",
+            "email",
+            "password1",
+            "password2",
+            "position",
+
+
+        )
+    
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    surname  = forms.CharField()
+    username = forms.CharField()
+    email = forms.CharField()
+    password1 = forms.CharField()
+    password2 = forms.CharField()
+    position  = forms.CharField()
+
+
+
 class ProfileForm(UserChangeForm):
     class Meta:
         model = User
