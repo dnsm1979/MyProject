@@ -1,89 +1,153 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<div class="starter-template text-center py-5 px-3"></div>
+{% extends "base.html" %} 
+{% load static %} 
+{% block content %}
+<div class="container">
+  <h3 class="text-center">Новая карточка оборудования</h3>
+  <div class="card mb-3">
+      <div class="card-body">
 
-<form>
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label"
-      >Название:</label
-    >
-    <textarea
-      class="form-control"
-      id="exampleFormControlTextarea1"
-      rows="1"
-    ></textarea>
-  </div>
-  <div class="input-group mb-3">
-    <label for="exampleDataList" class="form-label">Модель</label>
+<form action="{% url "cards:add_hardware" %}" method="post" id="add_hardware">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="id_name" class="form-label">Название:</label>
+        <input type="text" class="form-control" id="id_name"
+            value="{% if form.id_name.value %}{{ form.id_name.value }}{% endif %}"
+            name="first_name" required>
+        {% if form.id_name.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{form.id_name.errors}}</div>
+        {% endif %}
+      </div>
+    <div class="col-md-6 mb-3">
+    <label for="id_model" class="form-label">Модель:</label>
     <input
       class="form-control"
-      list="datalistOptions"
-      id="exampleDataList"
-      placeholder="Введите для поиска..."
-    />
-    <datalist id="datalistOptions">
+      list="datalist_model"
+      id="id_model"
+      placeholder="Введите для поиска..." value="{% if form.id_model.value %}{{ form.id_model.value }}{% endif %}"
+      name="id_model" required>
+    <datalist id="datalist_model">
       <option value="УниКоРД-МТ-Плюс"></option>
       <option value="МАММОСКАН"></option>
       <option value="УнивеРС"></option>
       <option value="СпектрАП"></option>
       <option value="Диаком"></option>
     </datalist>
-  </div>
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label"
-      >Заводской номер:</label
-    >
-    <textarea
-      class="form-control"
-      id="exampleFormControlTextarea1"
-      rows="1"
-    ></textarea>
-  </div>
+    {% if form.id_model.errors %}
+    <div class="alert alert-danger alert-dismissible fade show">{{form.id_model.errors}}</div>
+{% endif %}
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_serial_number" class="form-label">Заводской номер:</label>
+  <input type="text" class="form-control" id="id_serial_number"
+      value="{% if form.id_serial_number.value %}{{ form.id_serial_number.value }}{% endif %}"
+      name="id_serial_number" required>
+  {% if form.id_serial_number.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_serial_number.errors}}</div>
+  {% endif %}
 
-  <div class="mb-3">
-    <label for="date">Дата изготовления</label>
-    <input type="date" id="date_of_manufacture" />
-  </div>
-  <div class="mb-3">
-    <label for="date">Дата продажи</label>
-    <input type="date" id="date_of_pay" />
-  </div>
-  <div class="mb-3">
-    <label for="date">Дата ввода в эксплуатацию</label>
-    <input type="date" id="date_start" />
-  </div>
-  <div class="input-group mb-3">
-    <label for="exampleDataList" class="form-label">Страна</label>
-    <input
-      class="form-control"
-      list="datalistOptions"
-      id="exampleDataList"
-      placeholder="Введите для поиска..."
-    />
-    <datalist id="datalistOptions">
-      <option value="Россия"></option>
-      <option value="США"></option>
-      <option value="Франция"></option>
-      <option value="Япония"></option>
-      <option value="Беларусия"></option>
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_invent_number" class="form-label">Инвентарный номер:</label>
+  <input type="text" class="form-control" id="id_invent_number"
+      value="{% if form.id_invent_number.value %}{{ form.id_invent_number.value }}{% endif %}"
+      name="id_invent_number" required>
+  {% if form.id_invent_number.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_invent_number.errors}}</div>
+  {% endif %}
+
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_year_of_manufacture" class="form-label">Дата изготовления:</label>
+  <input type="text" class="form-control" id="id_year_of_manufacture"
+      value="{% if form.id_year_of_manufacture.value %}{{ form.id_year_of_manufacture.value }}{% endif %}"
+      name="id_year_of_manufacture" required>
+  {% if form.id_year_of_manufacture.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_year_of_manufacture.errors}}</div>
+  {% endif %}
+
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_year_of_sale" class="form-label">Дата продажи:</label>
+  <input type="text" class="form-control" id="id_year_of_sale"
+      value="{% if form.id_year_of_sale.value %}{{ form.id_year_of_sale.value }}{% endif %}"
+      name="id_year_of_sale" required>
+  {% if form.id_year_of_sale.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_year_of_sale.errors}}</div>
+  {% endif %}
+
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_commissioning_date" class="form-label">Дата ввода в эксплуатацию:</label>
+  <input type="text" class="form-control" id="id_commissioning_date"
+      value="{% if form.id_commissioning_date.value %}{{ form.id_commissioning_date.value }}{% endif %}"
+      name="id_commissioning_date" required>
+  {% if form.id_commissioning_date.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_commissioning_date.errors}}</div>
+  {% endif %}
+
+</div>
+
+<div class="col-md-6 mb-3">
+  <label for="id_cauntry" class="form-label">Страна:</label>
+  <input
+    class="form-control"
+    list="datalist_cauntry"
+    id="id_cauntry"
+    placeholder="Введите для поиска..." value="{% if form.id_cauntry.value %}{{ form.id_cauntry.value }}{% endif %}"
+    name="id_cauntry" required>
+    <datalist id="datalist_cauntry">
+      {% for c in countries %}
+      <option value={{ c.country }}></option>
+      {% endfor %}
     </datalist>
-  </div>
-  <div class="input-group mb-3">
-    <label for="exampleDataList" class="form-label">Производитель</label>
-    <input
-      class="form-control"
-      list="datalistOptions2"
-      id="exampleDataList2"
-      placeholder="Введите для поиска..."
-    />
-    <datalist id="datalistOptions2">
+    {% if form.id_cauntry.errors %}
+    <div class="alert alert-danger alert-dismissible fade show">{{form.id_cauntry.errors}}</div>
+{% endif %}
+</div>
+
+<div class="col-md-6 mb-3">
+  <label for="id_manufacturer" class="form-label">Производитель:</label>
+  <input
+    class="form-control"
+    list="datalist_manufacturer"
+    id="id_manufacturer"
+    placeholder="Введите для поиска..." value="{% if form.id_manufacturer.value %}{{ form.id_manufacturer.value }}{% endif %}"
+    name="id_manufacturer" required>
+    <datalist id="datalist_manufacturer">
       <option value="АО «Медицинские технологии Лтд»"></option>
       <option value="ЗАО «Рентгенпром»"></option>
       <option value="GE HealthCare"></option>
       <option value="ООО «СпектрАп»"></option>
      <option value="Toshiba Medical"></option>
     </datalist>
-  </div>
+    {% if form.id_manufacturer.errors %}
+    <div class="alert alert-danger alert-dismissible fade show">{{form.id_manufacturer.errors}}</div>
+{% endif %}
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_lpu" class="form-label">ЛПУ:</label>
+  <input
+    class="form-control"
+    list="datalist_lpu"
+    id="id_lpu"
+    placeholder="Введите для поиска..." value="{% if form.id_lpu.value %}{{ form.id_lpu.value }}{% endif %}"
+    name="id_lpu" required>
+    <datalist id="datalist_lpu">
+      <option value="ГАУЗ СО ГБ24"></option>
+      <option value="ГАУЗ СО ЦГБ36"></option>
+      <option value="ГАУЗ СО ГБ10"></option>
+      <option value="ГАУЗ СО ЦГБ7"></option>
+     <option value="ГАУЗ СО ГБ15"></option>
+    </datalist>
+    {% if form.id_lpu.errors %}
+    <div class="alert alert-danger alert-dismissible fade show">{{form.id_lpu.errors}}</div>
+{% endif %}
+</div>
 
   <button type="submit" class="btn btn-primary">Создать</button>
 </form>
+</div>
+</div>
+</div>
 {% endblock %}

@@ -1,15 +1,15 @@
 from django.db import models
 from image_manager.models import Location
-from cards.models import CartLPU, CartHardware
+from cards.models import CardLPU, CardHardware
 from users.models import User
 
 
 class ActT(models.Model):
 
     name = models.CharField(max_length=150, verbose_name="Название")
-    lpu = models.ForeignKey(to=CartLPU, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Владелец")
+    lpu = models.ForeignKey(to=CardLPU, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Владелец")
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Пользователь", default=None)
-    device = models.ForeignKey(to=CartHardware, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Оборудование")
+    device = models.ForeignKey(to=CardHardware, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Оборудование")
     check_result = models.TextField(null=True, blank=True, verbose_name="Результат проверки")
     probable_ause = models.TextField(null=True, blank=True, verbose_name="Вероятная причина")
     conclusion = models.TextField(null=True, blank=True, verbose_name="Заключение")

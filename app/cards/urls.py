@@ -5,7 +5,7 @@ from cards import views
 app_name = 'cards'
 
 urlpatterns = [
-    path('add_lpu/', views.AddLpuView.as_view(), name='add_lpu'),
+    path('add_lpu/', views.AddLPUView.as_view(), name='add_lpu'),
     path('add_hardware/', views.AddHardwareView.as_view(), name='add_hardware'),
     
 ]

@@ -57,7 +57,7 @@ class UserRegistrationView(CreateView):
     #         auth.login(self.request, user)
 
     #     if session_key:
-    #         Cart.objects.filter(session_key=session_key).update(user=user)
+    #         .objects.filter(session_key=session_key).update(user=user)
 
     #     messages.success(self.request, f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт")
     #     return HttpResponseRedirect(self.success_url)
