@@ -1,6 +1,7 @@
 {% extends "base.html" %} 
 {% load static %} 
 {% block content %}
+<div class="starter-template text-center py-5 px-3"></div>
 <div class="container">
   <h3 class="text-center">Новая карточка оборудования</h3>
   <div class="card mb-3">
@@ -13,7 +14,7 @@
         <label for="id_name" class="form-label">Название:</label>
         <input type="text" class="form-control" id="id_name"
             value="{% if form.id_name.value %}{{ form.id_name.value }}{% endif %}"
-            name="first_name" required>
+            name="id_name" required>
         {% if form.id_name.errors %}
             <div class="alert alert-danger alert-dismissible fade show">{{form.id_name.errors}}</div>
         {% endif %}
@@ -27,11 +28,9 @@
       placeholder="Введите для поиска..." value="{% if form.id_model.value %}{{ form.id_model.value }}{% endif %}"
       name="id_model" required>
     <datalist id="datalist_model">
-      <option value="УниКоРД-МТ-Плюс"></option>
-      <option value="МАММОСКАН"></option>
-      <option value="УнивеРС"></option>
-      <option value="СпектрАП"></option>
-      <option value="Диаком"></option>
+      {% for m in model %}
+      <option value={{ m.model }}></option>
+      {% endfor %}
     </datalist>
     {% if form.id_model.errors %}
     <div class="alert alert-danger alert-dismissible fade show">{{form.id_model.errors}}</div>
@@ -115,11 +114,9 @@
     placeholder="Введите для поиска..." value="{% if form.id_manufacturer.value %}{{ form.id_manufacturer.value }}{% endif %}"
     name="id_manufacturer" required>
     <datalist id="datalist_manufacturer">
-      <option value="АО «Медицинские технологии Лтд»"></option>
-      <option value="ЗАО «Рентгенпром»"></option>
-      <option value="GE HealthCare"></option>
-      <option value="ООО «СпектрАп»"></option>
-     <option value="Toshiba Medical"></option>
+      {% for mnf in manufacturer %}
+      <option value={{ mnf.manufacturer }}></option>
+      {% endfor %}
     </datalist>
     {% if form.id_manufacturer.errors %}
     <div class="alert alert-danger alert-dismissible fade show">{{form.id_manufacturer.errors}}</div>
@@ -134,20 +131,19 @@
     placeholder="Введите для поиска..." value="{% if form.id_lpu.value %}{{ form.id_lpu.value }}{% endif %}"
     name="id_lpu" required>
     <datalist id="datalist_lpu">
-      <option value="ГАУЗ СО ГБ24"></option>
-      <option value="ГАУЗ СО ЦГБ36"></option>
-      <option value="ГАУЗ СО ГБ10"></option>
-      <option value="ГАУЗ СО ЦГБ7"></option>
-     <option value="ГАУЗ СО ГБ15"></option>
+      {% for l in lpu %}
+      <option value={{ l.lpu }}></option>
+      {% endfor %}
     </datalist>
     {% if form.id_lpu.errors %}
     <div class="alert alert-danger alert-dismissible fade show">{{form.id_lpu.errors}}</div>
 {% endif %}
 </div>
 
-  <button type="submit" class="btn btn-primary">Создать</button>
+<button type="submit" class="btn btn-primary">Создать</button>
 </form>
 </div>
 </div>
 </div>
+
 {% endblock %}

@@ -2,7 +2,149 @@
 {% load static %}
 {% block content %}
 <div class="starter-template text-center py-5 px-3"></div>
+
 <form>
+  <div class="container">
+    <h3 class="text-center">Новый Акт технического состояния оборудования</h3>
+    <div class="card mb-3">
+        <div class="card-body">
+  
+  <form action="{% url "act_technical:act_add" %}" method="post" id="act_add">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+          <label for="id_name" class="form-label">Выберите дату:</label>
+          <input type="date" class="form-control" id="id_creation_date"
+              value="{% if form.id_creation_date.value %}{{ form.id_creation_date.value }}{% endif %}"
+              name="id_creation_date" required>
+          {% if form.id_creation_date.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_creation_date.errors}}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+          <input type="text" class="form-control" id="id_representative_1"
+              value="{% if form.id_representative_1.value %}{{ form.id_representative_1.value }}{% endif %}"
+              name="id_representative_1" required>
+          {% if form.id_representative_1.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_1.errors}}</div>
+          {% endif %}
+        
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+          <input type="text" class="form-control" id="id_representative_2"
+              value="{% if form.id_representative_2.value %}{{ form.id_representative_2.value }}{% endif %}"
+              name="id_representative_2" required>
+          {% if form.id_representative_2.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_2.errors}}</div>
+          {% endif %}
+        
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+          <input type="text" class="form-control" id="id_representative_3"
+              value="{% if form.id_representative_3.value %}{{ form.id_representative_3.value }}{% endif %}"
+              name="id_representative_3" required>
+          {% if form.id_representative_3.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_3.errors}}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="id_lpu" class="form-label">Выберете ЛПУ:</label>
+          <input
+            class="form-control"
+            list="datalist_lpu"
+            id="id_lpu"
+            placeholder="Введите для поиска..." value="{% if form.id_lpu.value %}{{ form.id_lpu.value }}{% endif %}"
+            name="id_lpu" required>
+            <datalist id="datalist_lpu">
+              {% for l in lpu %}
+              <option value={{ l.lpu }}></option>
+              {% endfor %}
+            </datalist>
+            
+            
+            {% if form.id_lpu.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{form.id_lpu.errors}}</div>
+        {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="id_device" class="form-label">Выберете оборудование:</label>
+          <input
+          class="form-control"
+          list="datalist_device"
+          id="id_device"
+          placeholder="Введите для поиска..." value="{% if form.id_device.value %}{{ form.id_device.value }}{% endif %}"
+          name="id_device" required>
+          <datalist id="datalist_device">
+            {% for d in device %}
+            <option value={{ d.device }}></option>
+            {% endfor %}
+          </datalist>
+          {% if form.id_device.errors %}
+          <div class="alert alert-danger alert-dismissible fade show">{{form.id_device.errors}}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_lpu" %}" role="button">Новое ЛПУ</a></div>
+          <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_hardware" %}" role="button">Новое оборудование</a></div>
+
+  <div class="col-md-12 mb-3">
+
+
+    <label for="id_check_result" class="form-label">При проверке оборудования выявляно:</label>
+    <textarea class="form-control" id="id_check_result" rows="3"
+        value="{% if form.id_check_result.value %}{{ form.id_check_result.value }}{% endif %}"
+        name="id_check_result" required></textarea>
+    {% if form.id_check_result.errors %}
+        <div class="alert alert-danger alert-dismissible fade show">{{form.id_check_result.errors}}</div>
+    {% endif %}
+  
+  </div>
+  <div class="col-md-12 mb-3">
+    <label for="id_probable_ause" class="form-label">Вероятные причины:</label>
+    <textarea class="form-control" id="id_probable_ause" rows="3"
+        value="{% if form.id_probable_ause.value %}{{ form.id_probable_ause.value }}{% endif %}"
+        name="id_probable_ause" required></textarea>
+    {% if form.id_probable_ause.errors %}
+        <div class="alert alert-danger alert-dismissible fade show">{{form.id_probable_ause.errors}}</div>
+    {% endif %}
+  
+  </div>
+  <div class="col-md-12 mb-3">
+    <label for="id_conclusion" class="form-label">Заключение:</label>
+    <textarea class="form-control" id="id_conclusion" rows="3"
+        value="{% if form.id_conclusion.value %}{{ form.id_conclusion.value }}{% endif %}"
+        name="id_conclusion" required></textarea>
+    {% if form.id_conclusion.errors %}
+        <div class="alert alert-danger alert-dismissible fade show">{{form.id_conclusion.errors}}</div>
+    {% endif %}
+  
+  </div>
+
+
+</div>
+<button type="submit" class="btn btn-primary">Создать</button>
+
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <form>
     <div class="mb-3">
 
 
@@ -51,4 +193,4 @@
     <button type="submit" class="btn btn-primary">Создать</button>
     <button type="submit" class="btn btn-primary">Сохранить черновик</button>
   </form>
-{% endblock  %}
+{% endblock  %} {% endcomment %}

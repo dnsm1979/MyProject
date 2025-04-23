@@ -2,65 +2,118 @@
 <div class="starter-template text-center py-5 px-3"></div>
 
 <form>
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label"
-      >Название:</label
-    >
-    <textarea
-      class="form-control"
-      id="exampleFormControlTextarea1"
-      rows="1"
-    ></textarea>
-  </div>
-  <div class="input-group mb-3">
-    <label for="exampleDataList" class="form-label">Город</label>
-    <input
-      class="form-control"
-      list="datalistOptions"
-      id="exampleDataList"
-      placeholder="Введите для поиска..."
-    />
-    <datalist id="datalistOptions">
-      <option value="Екатеринбург"></option>
-      <option value="Арамиль"></option>
-      <option value="Ирбит"></option>
-      <option value="Реж"></option>
-      <option value="Нижневартовск"></option>
-    </datalist>
-  </div>
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label"
-      >Индекс:</label
-    >
-    <textarea
-      class="form-control"
-      id="exampleFormControlTextarea1"
-      rows="1"
-    ></textarea>
-  </div>
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label"
-      >Адрес(улица, строение):</label
-    >
-    <textarea
-      class="form-control"
-      id="exampleFormControlTextarea1"
-      rows="1"
-    ></textarea>
-  </div>
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label"
-      >Телефон:</label
-    >
-    <textarea
-      class="form-control"
-      id="exampleFormControlTextarea1"
-      rows="1"
-    ></textarea>
-  </div>
-
+  <div class="container">
+    <h3 class="text-center">Новая карточка ЛПУ</h3>
+    <div class="card mb-3">
+        <div class="card-body">
   
+  <form action="{% url "cards:add_lpu" %}" method="post" id="add_lpu">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+          <label for="id_name" class="form-label">Название:</label>
+          <input type="text" class="form-control" id="id_name"
+              value="{% if form.id_name.value %}{{ form.id_name.value }}{% endif %}"
+              name="first_name" required>
+          {% if form.id_name.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_name.errors}}</div>
+          {% endif %}
+        </div>
+    <div class="col-md-6 mb-3">
+      <label for="id_city" class="form-label">Город:</label>
+      <input
+        class="form-control"
+        list="datalist_city"
+        id="id_city"
+        placeholder="Введите для поиска..." value="{% if form.id_city.value %}{{ form.id_city.value }}{% endif %}"
+        name="id_city" required>
+      <datalist id="datalist_city">
+        {% for c in city %}
+        <option value={{ c.city }}></option>
+        {% endfor %}
+      </datalist>
+      {% if form.id_city.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_city.errors}}</div>
+  {% endif %}
+  </div>
+  <div class="col-md-6 mb-3">
+    <label for="id_index" class="form-label">Индекс:</label>
+    <input type="text" class="form-control" id="id_index"
+        value="{% if form.id_index.value %}{{ form.id_index.value }}{% endif %}"
+        name="id_index" required>
+    {% if form.id_index.errors %}
+        <div class="alert alert-danger alert-dismissible fade show">{{form.id_index.errors}}</div>
+    {% endif %}
+  
+  </div>
+  <div class="col-md-6 mb-3">
+    <label for="id_adress" class="form-label">Адрес(улица, строение):</label>
+    <input type="text" class="form-control" id="id_adress"
+        value="{% if form.id_adress.value %}{{ form.id_adress.value }}{% endif %}"
+        name="id_adress" required>
+    {% if form.id_adress.errors %}
+        <div class="alert alert-danger alert-dismissible fade show">{{form.id_adress.errors}}</div>
+    {% endif %}
+  
+  </div>
+  <div class="col-md-6 mb-3">
+    <label for="id_zip" class="form-label">Область(республика, край):</label>
+    <input type="text" class="form-control" id="id_zip"
+        value="{% if form.id_zip.value %}{{ form.id_zip.value }}{% endif %}"
+        name="id_zip" required>
+    {% if form.id_zip.errors %}
+        <div class="alert alert-danger alert-dismissible fade show">{{form.id_zip.errors}}</div>
+    {% endif %}
+  
+  </div>
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_phone" class="form-label">Телефон:</label>
+  <input type="text" class="form-control" id="id_phone"
+      value="{% if form.id_phone.value %}{{ form.id_phone.value }}{% endif %}"
+      name="id_phone" required>
+  {% if form.id_phone.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_phone.errors}}</div>
+  {% endif %}
 
-  <button type="submit" class="btn btn-primary">Создать</button>
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+  <input type="text" class="form-control" id="id_representative_1"
+      value="{% if form.id_representative_1.value %}{{ form.id_representative_1.value }}{% endif %}"
+      name="id_representative_1" required>
+  {% if form.id_representative_1.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_1.errors}}</div>
+  {% endif %}
+
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+  <input type="text" class="form-control" id="id_representative_2"
+      value="{% if form.id_representative_2.value %}{{ form.id_representative_2.value }}{% endif %}"
+      name="id_representative_2" required>
+  {% if form.id_representative_2.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_2.errors}}</div>
+  {% endif %}
+
+</div>
+<div class="col-md-6 mb-3">
+  <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+  <input type="text" class="form-control" id="id_representative_3"
+      value="{% if form.id_representative_3.value %}{{ form.id_representative_3.value }}{% endif %}"
+      name="id_representative_3" required>
+  {% if form.id_representative_3.errors %}
+      <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_3.errors}}</div>
+  {% endif %}
+
+</div>
+<button type="submit" class="btn btn-primary">Создать</button>
 </form>
+</div>
+</div>
+</div>
 {% endblock %}
+
+
+
+

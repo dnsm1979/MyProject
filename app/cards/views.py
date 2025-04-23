@@ -10,7 +10,7 @@ from django.views.generic import FormView
 
 from cards.forms import AddHardwareForm, AddLPUForm
 
-from .models import Country
+from .models import CardHardware, Country, City
 
 
 
@@ -53,6 +53,9 @@ class AddHardwareView(LoginRequiredMixin, FormView):
         context['title'] = 'Добавление оборудования'
         context['order'] = True
         context['countries'] = Country.objects.all()
+        context['manufacturer'] = CardHardware.objects.all()
+        context['model'] = CardHardware.objects.all()
+        context['lpu'] = CardHardware.objects.all()
         return context
     
 
@@ -79,4 +82,5 @@ class AddLPUView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Добавление ЛПУ'
         context['order'] = True
+        context['city'] = City.objects.all()
         return context

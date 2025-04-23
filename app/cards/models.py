@@ -15,6 +15,7 @@ class CardLPU(models.Model):
     representative_3 = models.CharField(max_length=250, blank=True, null=True, verbose_name="Представитель ЛПУ 3")
     lpu = models.CharField(max_length=150, verbose_name="Владелец")
     city = models.ForeignKey(to=City, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Город")
+    phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="Телефон")
 
     class Meta:
         db_table = 'card_lpu'

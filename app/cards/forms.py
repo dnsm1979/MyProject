@@ -1,5 +1,7 @@
 from django import forms
 
+from cards.models import CardLPU
+
 
 
 class AddLPUForm(forms.Form):
@@ -26,6 +28,11 @@ class AddHardwareForm(forms.Form):
     year_of_manufacture = forms.CharField()
     year_of_sale = forms.CharField()
     commissioning_date = forms.CharField()
-    lpu = forms.CharField()
+    lpu = forms.ModelChoiceField(required = True, 
+                                label = "CardLPU",
+                                queryset = CardLPU.objects.filter( 'lpu' ).order_by('lpu'),
+                                widget = forms.Select(attrs = {
+                                    "class": "form-list-field"}
+                                ))
     cauntry = forms.CharField()
     manufacturer = forms.CharField()
