@@ -3,133 +3,160 @@
 {% block content %}
 <div class="starter-template text-center py-5 px-3"></div>
 
-<form>
-  <div class="container">
-    <h3 class="text-center">Новый Акт технического состояния оборудования</h3>
-    <div class="card mb-3">
-        <div class="card-body">
-  
-  <form action="{% url "act_technical:act_add" %}" method="post" id="act_add">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-6 mb-3">
-          <label for="id_name" class="form-label">Выберите дату:</label>
-          <input type="date" class="form-control" id="id_creation_date"
-              value="{% if form.id_creation_date.value %}{{ form.id_creation_date.value }}{% endif %}"
-              name="id_creation_date" required>
-          {% if form.id_creation_date.errors %}
-              <div class="alert alert-danger alert-dismissible fade show">{{form.id_creation_date.errors}}</div>
-          {% endif %}
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
-          <input type="text" class="form-control" id="id_representative_1"
-              value="{% if form.id_representative_1.value %}{{ form.id_representative_1.value }}{% endif %}"
-              name="id_representative_1" required>
-          {% if form.id_representative_1.errors %}
-              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_1.errors}}</div>
-          {% endif %}
-        
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
-          <input type="text" class="form-control" id="id_representative_2"
-              value="{% if form.id_representative_2.value %}{{ form.id_representative_2.value }}{% endif %}"
-              name="id_representative_2" required>
-          {% if form.id_representative_2.errors %}
-              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_2.errors}}</div>
-          {% endif %}
-        
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
-          <input type="text" class="form-control" id="id_representative_3"
-              value="{% if form.id_representative_3.value %}{{ form.id_representative_3.value }}{% endif %}"
-              name="id_representative_3" required>
-          {% if form.id_representative_3.errors %}
-              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_3.errors}}</div>
-          {% endif %}
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="id_lpu" class="form-label">Выберете ЛПУ:</label>
-          <input
-            class="form-control"
-            list="datalist_lpu"
-            id="id_lpu"
-            placeholder="Введите для поиска..." value="{% if form.id_lpu.value %}{{ form.id_lpu.value }}{% endif %}"
-            name="id_lpu" required>
-            <datalist id="datalist_lpu">
-              {% for l in lpu %}
-              <option value={{ l.lpu }}></option>
-              {% endfor %}
-            </datalist>
-            
-            
-            {% if form.id_lpu.errors %}
-            <div class="alert alert-danger alert-dismissible fade show">{{form.id_lpu.errors}}</div>
-        {% endif %}
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="id_device" class="form-label">Выберете оборудование:</label>
-          <input
-          class="form-control"
-          list="datalist_device"
-          id="id_device"
-          placeholder="Введите для поиска..." value="{% if form.id_device.value %}{{ form.id_device.value }}{% endif %}"
-          name="id_device" required>
-          <datalist id="datalist_device">
-            {% for d in device %}
-            <option value={{ d.device }}></option>
-            {% endfor %}
-          </datalist>
-          {% if form.id_device.errors %}
-          <div class="alert alert-danger alert-dismissible fade show">{{form.id_device.errors}}</div>
-          {% endif %}
-        </div>
-        <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_lpu" %}" role="button">Новое ЛПУ</a></div>
-          <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_hardware" %}" role="button">Новое оборудование</a></div>
+<div class="container">
+  <h3 class="text-center">Новый Акт технического состояния оборудования</h3>
+  <div class="card mb-3">
+    <div class="card-body">
+      <form action="{% url 'act_technical:act_add' %}" method="post" id="act_add">
+        {% csrf_token %}
+        <div class="row">
+          <!-- Дата и представители -->
+          <div class="col-md-6 mb-3">
+            <label for="id_creation_date" class="form-label">Дата составления акта:</label>
+            <input type="date" class="form-control" id="id_creation_date"
+              value="{% if form.creation_date.value %}{{ form.creation_date.value|date:'Y-m-d' }}{% else %}{% now 'Y-m-d' %}{% endif %}"
+              name="creation_date" required>
+            {% if form.creation_date.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.creation_date.errors }}</div>
+            {% endif %}
+          </div>
 
-  <div class="col-md-12 mb-3">
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+            <input type="text" class="form-control" id="id_representative_1"
+              value="{{ form.representative_1.value|default_if_none:'' }}"
+              name="representative_1" required>
+            {% if form.representative_1.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_1.errors }}</div>
+            {% endif %}
+          </div>
 
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+            <input type="text" class="form-control" id="id_representative_2"
+              value="{{ form.representative_2.value|default_if_none:'' }}"
+              name="representative_2">
+            {% if form.representative_2.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_2.errors }}</div>
+            {% endif %}
+          </div>
 
-    <label for="id_check_result" class="form-label">При проверке оборудования выявляно:</label>
-    <textarea class="form-control" id="id_check_result" rows="3"
-        value="{% if form.id_check_result.value %}{{ form.id_check_result.value }}{% endif %}"
-        name="id_check_result" required></textarea>
-    {% if form.id_check_result.errors %}
-        <div class="alert alert-danger alert-dismissible fade show">{{form.id_check_result.errors}}</div>
-    {% endif %}
-  
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+            <input type="text" class="form-control" id="id_representative_3"
+              value="{{ form.representative_3.value|default_if_none:'' }}"
+              name="representative_3">
+            {% if form.representative_3.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_3.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- ЛПУ и оборудование -->
+          <div class="col-md-6 mb-3">
+            <label for="id_lpu" class="form-label">ЛПУ:</label>
+            <div class="input-group">
+              <input class="form-control" list="datalist_lpu" id="id_lpu" 
+                placeholder="Начните вводить название ЛПУ..."
+                value="{{ form.lpu.value|default_if_none:'' }}" 
+                name="lpu" required autocomplete="off">
+              <datalist id="datalist_lpu">
+                {% for l in lpu_list %}
+                <option value="{{ l.name }}">{{ l.name }}</option>
+                {% endfor %}
+              </datalist>
+              <a class="btn btn-outline-secondary" href="{% url 'cards:add_lpu' %}" target="_blank">
+                <i class="fas fa-plus"></i> Новое
+              </a>
+            </div>
+            {% if form.lpu.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.lpu.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_device" class="form-label">Оборудование:</label>
+            <div class="input-group">
+              <input class="form-control" list="datalist_device" id="id_device" 
+                placeholder="Начните вводить название оборудования..."
+                value="{{ form.device.value|default_if_none:'' }}" 
+                name="device" required autocomplete="off">
+              <datalist id="datalist_device">
+                {% for d in device_list %}
+                <option value="{{ d.name }}">{{ d.name }}</option>
+                {% endfor %}
+              </datalist>
+              <a class="btn btn-outline-secondary" href="{% url 'cards:add_hardware' %}" target="_blank">
+                <i class="fas fa-plus"></i> Новое
+              </a>
+            </div>
+            {% if form.device.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.device.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Текстовые поля -->
+          <div class="col-md-12 mb-3">
+            <label for="id_check_result" class="form-label">Результаты проверки оборудования:</label>
+            <textarea class="form-control" id="id_check_result" rows="3"
+              name="check_result" required>{{ form.check_result.value|default_if_none:'' }}</textarea>
+            {% if form.check_result.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.check_result.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label for="id_probable_cause" class="form-label">Вероятные причины неисправности:</label>
+            <textarea class="form-control" id="id_probable_cause" rows="3"
+              name="probable_cause">{{ form.probable_cause.value|default_if_none:'' }}</textarea>
+            {% if form.probable_cause.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.probable_cause.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label for="id_conclusion" class="form-label">Заключение:</label>
+            <textarea class="form-control" id="id_conclusion" rows="3"
+              name="conclusion" required>{{ form.conclusion.value|default_if_none:'' }}</textarea>
+            {% if form.conclusion.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.conclusion.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Кнопка отправки -->
+          <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-file-alt"></i> Создать акт
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="col-md-12 mb-3">
-    <label for="id_probable_ause" class="form-label">Вероятные причины:</label>
-    <textarea class="form-control" id="id_probable_ause" rows="3"
-        value="{% if form.id_probable_ause.value %}{{ form.id_probable_ause.value }}{% endif %}"
-        name="id_probable_ause" required></textarea>
-    {% if form.id_probable_ause.errors %}
-        <div class="alert alert-danger alert-dismissible fade show">{{form.id_probable_ause.errors}}</div>
-    {% endif %}
-  
-  </div>
-  <div class="col-md-12 mb-3">
-    <label for="id_conclusion" class="form-label">Заключение:</label>
-    <textarea class="form-control" id="id_conclusion" rows="3"
-        value="{% if form.id_conclusion.value %}{{ form.id_conclusion.value }}{% endif %}"
-        name="id_conclusion" required></textarea>
-    {% if form.id_conclusion.errors %}
-        <div class="alert alert-danger alert-dismissible fade show">{{form.id_conclusion.errors}}</div>
-    {% endif %}
-  
-  </div>
+</div>
 
+<!-- Подключение Font Awesome для иконок -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-</div>
-<button type="submit" class="btn btn-primary">Создать</button>
+<style>
+  .input-group-text {
+    min-width: 40px;
+    justify-content: center;
+  }
+  textarea.form-control {
+    min-height: 120px;
+  }
+</style>
 
-</form>
-</div>
-</div>
-</div>
+<script>
+// Автоматическое заполнение текущей даты, если поле пустое
+document.addEventListener('DOMContentLoaded', function() {
+  const dateField = document.getElementById('id_creation_date');
+  if (dateField && !dateField.value) {
+    const today = new Date();
+    dateField.value = today.toISOString().substr(0, 10);
+  }
+});
+</script>
 {% endblock %}
 
 
@@ -142,55 +169,128 @@
 
 
 
+{% comment %} {% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="starter-template text-center py-5 px-3"></div>
 
 
-{% comment %} <form>
-    <div class="mb-3">
+  <div class="container">
+    <h3 class="text-center">Новый Акт технического состояния оборудования</h3>
+    <div class="card mb-3">
+      <div class="card-body">
 
+        <form action="{% url "act_technical:act_add" %}" method="post" id="act_add">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="id_name" class="form-label">Выберите дату:</label>
+              <input type="date" class="form-control" id="id_creation_date"
+                value="{% if form.id_creation_date.value %}{{ form.id_creation_date.value }}{% endif %}"
+                name="id_creation_date" required>
+              {% if form.id_creation_date.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_creation_date.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+              <input type="text" class="form-control" id="id_representative_1"
+                value="{% if form.id_representative_1.value %}{{ form.id_representative_1.value }}{% endif %}"
+                name="id_representative_1" required>
+              {% if form.id_representative_1.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_1.errors}}</div>
+              {% endif %}
 
-          <label for="date">Выберите дату</label>
-          <input type="date" id="date">
-    </div>
-    <div class="input-group mb-3">
-      <label for="exampleDataList" class="form-label">Выберете ЛПУ</label>
-      <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Введите для поиска...">
-      <datalist id="datalistOptions">
-        <option value="ГАУЗ СО ГБ№24">
-        <option value="ГАУЗ СО ГБ№36">
-        <option value="ГАУЗ СО ГБ№7">
-        <option value="ГАУЗ СО ГБ№3">
-        <option value="ГАУЗ СО ГБ№2">
-      </datalist>
-          
-      <a class="btn btn-primary" href="{% url "cards:add_lpu" %}" role="button">Новое ЛПУ</a>
-        
-    </div>
-    <div class="input-group mb-3">
-        <label for="exampleDataList" class="form-label">Выберете оборудование  </label>
-        <input class="form-control" list="datalistOptions2" id="exampleDataList2" placeholder="Введите для поиска...">
-        <datalist id="datalistOptions2">
-          <option value="Парус">
-          <option value="СпектрАП">
-          <option value="Маммоскан">
-          <option value="Диаком">
-          <option value="Универс">
-        </datalist>
-        <a class="btn btn-primary" href="{% url "cards:add_hardware" %}" role="button">Новое оборудование</a>
-          
-    </div>
-    <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">При проверке оборудования выявляно: </label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+              <input type="text" class="form-control" id="id_representative_2"
+                value="{% if form.id_representative_2.value %}{{ form.id_representative_2.value }}{% endif %}"
+                name="id_representative_2" required>
+              {% if form.id_representative_2.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_2.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+              <input type="text" class="form-control" id="id_representative_3"
+                value="{% if form.id_representative_3.value %}{{ form.id_representative_3.value }}{% endif %}"
+                name="id_representative_3" required>
+              {% if form.id_representative_3.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_3.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_lpu" class="form-label">Выберете ЛПУ:</label>
+              <input class="form-control" list="datalist_lpu" id="id_lpu" placeholder="Введите для поиска..."
+                value="{% if form.lpu.value %}{{ form.lpu.value }}{% endif %}" name="lpu" required>
+              <datalist id="datalist_lpu">
+                {% for l in lpu %}
+                <option value={{ l.lpu }}></option>
+                {% endfor %}
+              </datalist>
+
+              {% if form.lpu.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.lpu.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_device" class="form-label">Выберете оборудование:</label>
+              <input class="form-control" list="datalist_device" id="id_device" placeholder="Введите для поиска..."
+                value="{% if form.id_device.value %}{{ form.id_device.value }}{% endif %}" name="id_device" required>
+              <datalist id="datalist_device">
+                {% for d in device %}
+                <option value={{ d.device }}></option>
+                {% endfor %}
+              </datalist>
+              {% if form.id_device.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_device.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_lpu" %}" role="button">Новое
+                ЛПУ</a></div>
+            <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_hardware" %}"
+                role="button">Новое оборудование</a></div>
+
+            <div class="col-md-12 mb-3">
+
+              <label for="id_check_result" class="form-label">При проверке оборудования выявляно:</label>
+              <textarea class="form-control" id="id_check_result" rows="3"
+                value="{% if form.id_check_result.value %}{{ form.id_check_result.value }}{% endif %}"
+                name="id_check_result" required></textarea>
+              {% if form.id_check_result.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_check_result.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="id_probable_ause" class="form-label">Вероятные причины:</label>
+              <textarea class="form-control" id="id_probable_ause" rows="3"
+                value="{% if form.id_probable_ause.value %}{{ form.id_probable_ause.value }}{% endif %}"
+                name="id_probable_ause" required></textarea>
+              {% if form.id_probable_ause.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_probable_ause.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="id_conclusion" class="form-label">Заключение:</label>
+              <textarea class="form-control" id="id_conclusion" rows="3"
+                value="{% if form.id_conclusion.value %}{{ form.id_conclusion.value }}{% endif %}" name="id_conclusion"
+                required></textarea>
+              {% if form.id_conclusion.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_conclusion.errors}}</div>
+              {% endif %}
+
+            </div>
+
+          </div>
+          <button type="submit" class="btn btn-primary">Создать</button>
+
+        </form>
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Вероятные причины:</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-      </div>
-      <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Заключение:</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-      </div>
-    <button type="submit" class="btn btn-primary">Создать</button>
-    <button type="submit" class="btn btn-primary">Сохранить черновик</button>
-  </form>
-{% endblock  %} {% endcomment %}
+    </div>
+  </div>
+  {% endblock %}
+ {% endcomment %}

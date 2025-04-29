@@ -13,13 +13,13 @@ class ActAddForm(forms.Form):
     representative_3 = forms.CharField()
     lpu = forms.ModelChoiceField(required = True, 
                                 label = "CardLPU",
-                                queryset = CardLPU.objects.filter( 'lpu' ).order_by('lpu'),
+                                queryset = CardLPU.objects.all(),
                                 widget = forms.Select(attrs = {
                                     "class": "form-list-field"}
                                 ))
     device = forms.ModelChoiceField(required = True, 
                                 label = "CardHardware",
-                                queryset = CardHardware.objects.filter( 'device' ).order_by('device'),
+                                queryset = CardHardware.objects.all(),
                                 widget = forms.Select(attrs = {
                                     "class": "form-list-field"}
                                 ))

@@ -1,149 +1,210 @@
-{% extends "base.html" %} 
-{% load static %} 
+{% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="starter-template text-center py-5 px-3"></div>
 <div class="container">
   <h3 class="text-center">Новая карточка оборудования</h3>
   <div class="card mb-3">
-      <div class="card-body">
+    <div class="card-body">
+      <form action="{% url 'cards:add_hardware' %}" method="post" id="add_hardware">
+        {% csrf_token %}
+        <div class="row">
+          <!-- Основные поля -->
+          <div class="col-md-6 mb-3">
+  <label for="id_name" class="form-label">Название:</label>
+  <input type="text" class="form-control" id="id_name" list="nameSuggestions"
+    value="{{ form.name.value|default_if_none:'' }}" name="name" required autocomplete="off"
+    placeholder="Начните вводить название...">
 
-<form action="{% url "cards:add_hardware" %}" method="post" id="add_hardware">
-  {% csrf_token %}
-  <div class="row">
-    <div class="col-md-6 mb-3">
-        <label for="id_name" class="form-label">Название:</label>
-        <input type="text" class="form-control" id="id_name"
-            value="{% if form.id_name.value %}{{ form.id_name.value }}{% endif %}"
-            name="id_name" required>
-        {% if form.id_name.errors %}
-            <div class="alert alert-danger alert-dismissible fade show">{{form.id_name.errors}}</div>
-        {% endif %}
-      </div>
-    <div class="col-md-6 mb-3">
-    <label for="id_model" class="form-label">Модель:</label>
-    <input
-      class="form-control"
-      list="datalist_model"
-      id="id_model"
-      placeholder="Введите для поиска..." value="{% if form.id_model.value %}{{ form.id_model.value }}{% endif %}"
-      name="id_model" required>
-    <datalist id="datalist_model">
-      {% for m in model %}
-      <option value={{ m.model }}></option>
+  <datalist id="nameSuggestions">
+    {% for name in existing_names %}
+    <option value="{{ name }}">
       {% endfor %}
-    </datalist>
-    {% if form.id_model.errors %}
-    <div class="alert alert-danger alert-dismissible fade show">{{form.id_model.errors}}</div>
-{% endif %}
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_serial_number" class="form-label">Заводской номер:</label>
-  <input type="text" class="form-control" id="id_serial_number"
-      value="{% if form.id_serial_number.value %}{{ form.id_serial_number.value }}{% endif %}"
-      name="id_serial_number" required>
-  {% if form.id_serial_number.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_serial_number.errors}}</div>
+  </datalist>
+
+  {% if form.name.errors %}
+  <div class="alert alert-danger alert-dismissible fade show">{{ form.name.errors }}</div>
   {% endif %}
 
+  <small class="form-text text-muted">Выберите из списка или введите новое название</small>
 </div>
 <div class="col-md-6 mb-3">
-  <label for="id_invent_number" class="form-label">Инвентарный номер:</label>
-  <input type="text" class="form-control" id="id_invent_number"
-      value="{% if form.id_invent_number.value %}{{ form.id_invent_number.value }}{% endif %}"
-      name="id_invent_number" required>
-  {% if form.id_invent_number.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_invent_number.errors}}</div>
+  <label for="id_model" class="form-label">Модель:</label>
+  <input type="text" class="form-control" id="id_model" list="datalist_model"
+    value="{{ form.model.value|default_if_none:'' }}" name="model" required autocomplete="off"
+    placeholder="Начните вводить название...">
+  <datalist id="datalist_model">
+    {% for m in model_names %}
+    <option value="{{ m }}"></option>
+    {% endfor %}
+  </datalist>
+  {% if form.model.errors %}
+  <div class="alert alert-danger alert-dismissible fade show">{{ form.model.errors }}</div>
+  <small class="form-text text-muted">Выберите из списка или введите новое название</small>
   {% endif %}
-
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_year_of_manufacture" class="form-label">Дата изготовления:</label>
-  <input type="text" class="form-control" id="id_year_of_manufacture"
-      value="{% if form.id_year_of_manufacture.value %}{{ form.id_year_of_manufacture.value }}{% endif %}"
-      name="id_year_of_manufacture" required>
-  {% if form.id_year_of_manufacture.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_year_of_manufacture.errors}}</div>
-  {% endif %}
-
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_year_of_sale" class="form-label">Дата продажи:</label>
-  <input type="text" class="form-control" id="id_year_of_sale"
-      value="{% if form.id_year_of_sale.value %}{{ form.id_year_of_sale.value }}{% endif %}"
-      name="id_year_of_sale" required>
-  {% if form.id_year_of_sale.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_year_of_sale.errors}}</div>
-  {% endif %}
-
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_commissioning_date" class="form-label">Дата ввода в эксплуатацию:</label>
-  <input type="text" class="form-control" id="id_commissioning_date"
-      value="{% if form.id_commissioning_date.value %}{{ form.id_commissioning_date.value }}{% endif %}"
-      name="id_commissioning_date" required>
-  {% if form.id_commissioning_date.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_commissioning_date.errors}}</div>
-  {% endif %}
-
 </div>
 
-<div class="col-md-6 mb-3">
-  <label for="id_cauntry" class="form-label">Страна:</label>
-  <input
-    class="form-control"
-    list="datalist_cauntry"
-    id="id_cauntry"
-    placeholder="Введите для поиска..." value="{% if form.id_cauntry.value %}{{ form.id_cauntry.value }}{% endif %}"
-    name="id_cauntry" required>
-    <datalist id="datalist_cauntry">
-      {% for c in countries %}
-      <option value={{ c.country }}></option>
-      {% endfor %}
-    </datalist>
-    {% if form.id_cauntry.errors %}
-    <div class="alert alert-danger alert-dismissible fade show">{{form.id_cauntry.errors}}</div>
-{% endif %}
+          <!-- Поля с серийными номерами -->
+          <div class="col-md-6 mb-3">
+            <label for="id_serial_number" class="form-label">Заводской номер:</label>
+            <input type="text" class="form-control" id="id_serial_number"
+              value="{{ form.serial_number.value|default_if_none:'' }}" name="serial_number" required>
+            {% if form.serial_number.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.serial_number.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_invent_number" class="form-label">Инвентарный номер:</label>
+            <input type="text" class="form-control" id="id_invent_number"
+                   value="{{ form.invent_number.value|default_if_none:'' }}" 
+                   name="invent_number"
+                   placeholder="Не обязательно">
+            {% if form.invent_number.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.invent_number.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Даты -->
+          <div class="col-md-6 mb-3">
+            <label for="id_year_of_manufacture" class="form-label">Дата изготовления:</label>
+            <input type="text" class="form-control" id="id_year_of_manufacture"
+              value="{{ form.year_of_manufacture.value|default_if_none:'' }}" name="year_of_manufacture" required>
+            {% if form.year_of_manufacture.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.year_of_manufacture.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_year_of_sale" class="form-label">Дата продажи:</label>
+            <input type="text" class="form-control" id="id_year_of_sale"
+              value="{{ form.year_of_sale.value|default_if_none:'' }}" name="year_of_sale" required>
+            {% if form.year_of_sale.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.year_of_sale.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_commissioning_date" class="form-label">Дата ввода в эксплуатацию:</label>
+            <input type="text" class="form-control" id="id_commissioning_date"
+              value="{{ form.commissioning_date.value|default_if_none:'' }}" name="commissioning_date" required>
+            {% if form.commissioning_date.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.commissioning_date.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Поле страны с возможностью добавления нового -->
+          <div class="col-md-6 mb-3">
+            <label for="id_country" class="form-label">Страна:</label>
+            <select name="country" id="id_country" class="form-control select2" data-allow-new="true" data-model="country" data-url="{% url 'cards:add_country_ajax' %}">
+              <option value="">Выберите город</option>
+              {% for country_item in country %}
+              <option value="{{ country_item.id }}" 
+                {% if form.country.value == country_item.id|stringformat:"s" %}selected{% endif %}>
+                {{ country_item.country }}
+              </option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">Если страны нет в списке, введите новое название</small>
+            {% if form.country.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.country.errors }}</div>
+            {% endif %}
+          </div>
+
+
+          <div class="col-md-6 mb-3">
+            <label for="id_manufacturer" class="form-label">Производитель:</label>
+            <input type="text" class="form-control" id="id_manufacturer" list="datalist_manufacturer"
+             value="{{ form.manufacturer.value|default_if_none:'' }}" 
+              name="manufacturer" required autocomplete="off"
+              placeholder="Начните вводить название...">
+            <datalist id="datalist_manufacturer">
+              {% for mnf in manufacturer_name %}
+              <option value="{{ mnf }}"></option>
+              {% endfor %}
+            </datalist>
+            {% if form.manufacturer.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.manufacturer.errors }}</div>
+            <small class="form-text text-muted">Выберите из списка или введите новое название</small>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_lpu" class="form-label">ЛПУ:</label>
+            <select name="lpu" id="id_lpu" class="form-control select2">
+              <option value="">Выберите из списка</option>
+              {% for item in lpu %}
+              <option value="{{ item.id }}"
+                {% if form.lpu.value == item.id|stringformat:"s" %}selected{% endif %}>
+                {{ item.name }}
+              </option>
+              {% endfor %}
+            </select>
+            {% if form.lpu.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.lpu.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary">Создать</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
-<div class="col-md-6 mb-3">
-  <label for="id_manufacturer" class="form-label">Производитель:</label>
-  <input
-    class="form-control"
-    list="datalist_manufacturer"
-    id="id_manufacturer"
-    placeholder="Введите для поиска..." value="{% if form.id_manufacturer.value %}{{ form.id_manufacturer.value }}{% endif %}"
-    name="id_manufacturer" required>
-    <datalist id="datalist_manufacturer">
-      {% for mnf in manufacturer %}
-      <option value={{ mnf.manufacturer }}></option>
-      {% endfor %}
-    </datalist>
-    {% if form.id_manufacturer.errors %}
-    <div class="alert alert-danger alert-dismissible fade show">{{form.id_manufacturer.errors}}</div>
-{% endif %}
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_lpu" class="form-label">ЛПУ:</label>
-  <input
-    class="form-control"
-    list="datalist_lpu"
-    id="id_lpu"
-    placeholder="Введите для поиска..." value="{% if form.id_lpu.value %}{{ form.id_lpu.value }}{% endif %}"
-    name="id_lpu" required>
-    <datalist id="datalist_lpu">
-      {% for l in lpu %}
-      <option value={{ l.lpu }}></option>
-      {% endfor %}
-    </datalist>
-    {% if form.id_lpu.errors %}
-    <div class="alert alert-danger alert-dismissible fade show">{{form.id_lpu.errors}}</div>
-{% endif %}
-</div>
-
-<button type="submit" class="btn btn-primary">Создать</button>
-</form>
-</div>
-</div>
-</div>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.select2[data-allow-new="true"]').select2({
+        placeholder: "Выберите или введите новое значение",
+        allowClear: true,
+        width: '100%',
+        tags: true,
+        language: {
+            noResults: function() {
+                return "Нажмите Enter, чтобы добавить новое значение";
+            }
+        },
+        createTag: function (params) {
+            return {
+                id: params.term,
+                text: params.term + ' (новый)',
+                newOption: true
+            }
+        }
+    }).on('select2:select', function (e) {
+        var data = e.params.data;
+        if (data.newOption) {
+            var select = $(this);
+            var model = select.data('model');
+            var url = select.data('url');
+            
+            // Отправляем новую страну на сервер
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    'name': data.text.replace(' (новый)', ''),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    // Создаем новый option с полученным ID
+                    var newOption = new Option(response.name, response.id, true, true);
+                    select.append(newOption).trigger('change');
+                    
+                    // Обновляем значение выбранным ID
+                    select.val(response.id).trigger('change');
+                },
+                error: function(xhr) {
+                    alert('Ошибка при сохранении нового значения');
+                }
+            });
+        }
+    });
+});
+</script>
 {% endblock %}

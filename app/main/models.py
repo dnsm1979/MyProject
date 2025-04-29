@@ -3,7 +3,7 @@ from django.urls import reverse
 from users.models import User
 
 class Country(models.Model):
-    country = models.CharField(max_length=150, blank=True, null=True, verbose_name='Страна')
+    country = models.CharField(max_length=150, unique=True, verbose_name='Страна')
 
     class Meta:
         db_table = 'country'
@@ -15,7 +15,7 @@ class Country(models.Model):
         return self.country
     
 class City(models.Model):
-    city = models.CharField(max_length=200, blank=True, null=True, verbose_name='Город')
+    city = models.CharField(max_length=200, unique=True, verbose_name='Город')
 
     class Meta:
         db_table = 'city'
@@ -25,6 +25,20 @@ class City(models.Model):
 
     def __str__(self):
         return self.city
+    
+
+
+class Region(models.Model):
+    zip = models.CharField(max_length=200, unique=True, verbose_name='Регион')
+
+    class Meta:
+        db_table = 'zip'
+        verbose_name = 'Регион'
+        verbose_name_plural = 'Регионы'
+        ordering = ("id",)
+
+    def __str__(self):
+        return f"{self.zip}"
     
 
 class Templates(models.Model):

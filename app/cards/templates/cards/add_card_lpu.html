@@ -1,119 +1,189 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
 <div class="starter-template text-center py-5 px-3"></div>
 
-<form>
-  <div class="container">
-    <h3 class="text-center">Новая карточка ЛПУ</h3>
-    <div class="card mb-3">
-        <div class="card-body">
-  
-  <form action="{% url "cards:add_lpu" %}" method="post" id="add_lpu">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-6 mb-3">
-          <label for="id_name" class="form-label">Название:</label>
-          <input type="text" class="form-control" id="id_name"
-              value="{% if form.id_name.value %}{{ form.id_name.value }}{% endif %}"
-              name="first_name" required>
-          {% if form.id_name.errors %}
-              <div class="alert alert-danger alert-dismissible fade show">{{form.id_name.errors}}</div>
-          {% endif %}
+<div class="container">
+  <h3 class="text-center">Новая карточка ЛПУ</h3>
+  <div class="card mb-3">
+    <div class="card-body">
+      <form action="{% url 'cards:add_lpu' %}" method="post" id="add_lpu">
+        {% csrf_token %}
+        <div class="row">
+          <!-- Основная информация -->
+          <div class="col-md-6 mb-3">
+            <label for="id_name" class="form-label">Название:</label>
+            <input type="text" class="form-control" id="id_name"
+              value="{{ form.name.value|default_if_none:'' }}" name="name" required>
+            {% if form.name.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Поле города с возможностью добавления нового -->
+          <div class="col-md-6 mb-3">
+            <label for="id_city" class="form-label">Город:</label>
+            <select name="city" id="id_city" class="form-control select2" data-allow-new="true" data-model="city" data-url="{% url 'cards:add_city_ajax' %}">
+              <option value="">Выберите город</option>
+              {% for city_item in city %}
+              <option value="{{ city_item.id }}" 
+                {% if form.city.value == city_item.id|stringformat:"s" %}selected{% endif %}>
+                {{ city_item.city }}
+              </option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">Если города нет в списке, введите новое название</small>
+            {% if form.city.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.city.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Адресные данные -->
+          <div class="col-md-6 mb-3">
+            <label for="id_index" class="form-label">Индекс:</label>
+            <input type="text" class="form-control" id="id_index"
+              value="{{ form.index.value|default_if_none:'' }}" name="index" required>
+            {% if form.index.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.index.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_adress" class="form-label">Адрес (улица, строение):</label>
+            <input type="text" class="form-control" id="id_adress"
+              value="{{ form.adress.value|default_if_none:'' }}" name="adress" required>
+            {% if form.adress.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.adress.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Поле области с возможностью добавления нового -->
+          <div class="col-md-6 mb-3">
+            <label for="id_zip" class="form-label">Область (республика, край):</label>
+            <select name="zip" id="id_zip" class="form-control select2" data-allow-new="true" data-model="zip" data-url="{% url 'cards:add_region_ajax' %}">
+              <option value="">Выберите область</option>
+              {% for zip_item in zip_name %}
+              <option value="{{ zip_item.id }}" 
+                {% if form.zip.value == zip_item.id|stringformat:"s" %}selected{% endif %}>
+                {{ zip_item.zip }}
+              </option>
+              {% endfor %}
+            </select>
+            <small class="form-text text-muted">Если области нет в списке, введите новое название</small>
+            {% if form.zip.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.zip.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Контактная информация -->
+          <div class="col-md-6 mb-3">
+            <label for="id_phone" class="form-label">Телефон:</label>
+            <input type="tel" class="form-control" id="id_phone"
+              value="{{ form.phone.value|default_if_none:'' }}" name="phone">
+            {% if form.phone.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.phone.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Представители -->
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+            <input type="text" class="form-control" id="id_representative_1"
+              value="{{ form.representative_1.value|default_if_none:'' }}" name="representative_1" placeholder="Не обязательно">
+            {% if form.representative_1.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_1.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+            <input type="text" class="form-control" id="id_representative_2"
+              value="{{ form.representative_2.value|default_if_none:'' }}" name="representative_2" placeholder="Не обязательно">
+            {% if form.representative_2.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_2.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+            <input type="text" class="form-control" id="id_representative_3"
+              value="{{ form.representative_3.value|default_if_none:'' }}" name="representative_3" placeholder="Не обязательно">
+            {% if form.representative_3.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_3.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Кнопка отправки -->
+          <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Создать карточку</button>
+          </div>
         </div>
-    <div class="col-md-6 mb-3">
-      <label for="id_city" class="form-label">Город:</label>
-      <input
-        class="form-control"
-        list="datalist_city"
-        id="id_city"
-        placeholder="Введите для поиска..." value="{% if form.id_city.value %}{{ form.id_city.value }}{% endif %}"
-        name="id_city" required>
-      <datalist id="datalist_city">
-        {% for c in city %}
-        <option value={{ c.city }}></option>
-        {% endfor %}
-      </datalist>
-      {% if form.id_city.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_city.errors}}</div>
-  {% endif %}
-  </div>
-  <div class="col-md-6 mb-3">
-    <label for="id_index" class="form-label">Индекс:</label>
-    <input type="text" class="form-control" id="id_index"
-        value="{% if form.id_index.value %}{{ form.id_index.value }}{% endif %}"
-        name="id_index" required>
-    {% if form.id_index.errors %}
-        <div class="alert alert-danger alert-dismissible fade show">{{form.id_index.errors}}</div>
-    {% endif %}
-  
-  </div>
-  <div class="col-md-6 mb-3">
-    <label for="id_adress" class="form-label">Адрес(улица, строение):</label>
-    <input type="text" class="form-control" id="id_adress"
-        value="{% if form.id_adress.value %}{{ form.id_adress.value }}{% endif %}"
-        name="id_adress" required>
-    {% if form.id_adress.errors %}
-        <div class="alert alert-danger alert-dismissible fade show">{{form.id_adress.errors}}</div>
-    {% endif %}
-  
-  </div>
-  <div class="col-md-6 mb-3">
-    <label for="id_zip" class="form-label">Область(республика, край):</label>
-    <input type="text" class="form-control" id="id_zip"
-        value="{% if form.id_zip.value %}{{ form.id_zip.value }}{% endif %}"
-        name="id_zip" required>
-    {% if form.id_zip.errors %}
-        <div class="alert alert-danger alert-dismissible fade show">{{form.id_zip.errors}}</div>
-    {% endif %}
-  
+      </form>
+    </div>
   </div>
 </div>
-<div class="col-md-6 mb-3">
-  <label for="id_phone" class="form-label">Телефон:</label>
-  <input type="text" class="form-control" id="id_phone"
-      value="{% if form.id_phone.value %}{{ form.id_phone.value }}{% endif %}"
-      name="id_phone" required>
-  {% if form.id_phone.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_phone.errors}}</div>
-  {% endif %}
 
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
-  <input type="text" class="form-control" id="id_representative_1"
-      value="{% if form.id_representative_1.value %}{{ form.id_representative_1.value }}{% endif %}"
-      name="id_representative_1" required>
-  {% if form.id_representative_1.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_1.errors}}</div>
-  {% endif %}
+<!-- Подключение Select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Инициализация Select2 для всех полей с классом select2
+    $('.select2').each(function() {
+        var allowNew = $(this).data('allow-new') === true;
+        
+        $(this).select2({
+            placeholder: "Выберите или введите новое значение",
+            allowClear: true,
+            width: '100%',
+            tags: allowNew,
+            language: {
+                noResults: function() {
+                    return allowNew ? "Нажмите Enter, чтобы добавить новое значение" : "Ничего не найдено";
+                }
+            },
+            createTag: allowNew ? function (params) {
+                return {
+                    id: params.term,
+                    text: params.term + ' (новый)',
+                    newOption: true
+                }
+            } : undefined
+        });
+    });
 
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
-  <input type="text" class="form-control" id="id_representative_2"
-      value="{% if form.id_representative_2.value %}{{ form.id_representative_2.value }}{% endif %}"
-      name="id_representative_2" required>
-  {% if form.id_representative_2.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_2.errors}}</div>
-  {% endif %}
-
-</div>
-<div class="col-md-6 mb-3">
-  <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
-  <input type="text" class="form-control" id="id_representative_3"
-      value="{% if form.id_representative_3.value %}{{ form.id_representative_3.value }}{% endif %}"
-      name="id_representative_3" required>
-  {% if form.id_representative_3.errors %}
-      <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_3.errors}}</div>
-  {% endif %}
-
-</div>
-<button type="submit" class="btn btn-primary">Создать</button>
-</form>
-</div>
-</div>
-</div>
+    // Обработка добавления новых значений
+    $('.select2[data-allow-new="true"]').on('select2:select', function (e) {
+        var data = e.params.data;
+        if (data.newOption) {
+            var select = $(this);
+            var model = select.data('model');
+            var url = select.data('url');
+            
+            // Отправляем новое значение на сервер
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    'name': data.text.replace(' (новый)', ''),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    // Создаем новый option с полученным ID
+                    var newOption = new Option(response.name, response.id, true, true);
+                    select.append(newOption).trigger('change');
+                    
+                    // Обновляем значение выбранным ID
+                    select.val(response.id).trigger('change');
+                },
+                error: function(xhr) {
+                    alert('Ошибка при сохранении нового значения');
+                    select.val(null).trigger('change');
+                }
+            });
+        }
+    });
+});
+</script>
 {% endblock %}
-
-
-
-
