@@ -1,28 +1,68 @@
+from django.utils import timezone
 from django import forms
+from .models import ActT
 
-from cards.models import CardLPU, CardHardware
+class ActAddForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        # Достаем request из kwargs перед вызовом родительского __init__
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+        
+        # Настройка виджетов
+        textarea_fields = ['check_result', 'probable_cause', 'conclusion', 'comments']
+        for field in textarea_fields:
+            self.fields[field].widget = forms.Textarea(attrs={'rows': 3})
+        
+        # Скрываем технические поля
+        # self.fields['name'].widget = forms.HiddenInput()
+        # self.fields['user'].widget = forms.HiddenInput()
+        
+        # Устанавливаем текущего пользователя
+        if self.request and not self.instance.pk:
+            self.initial['user'] = self.request.user
+
+    class Meta:
+        model = ActT
+        fields = ('device', 'lpu', 'user', 'check_result', 
+                 'probable_cause', 'conclusion', 'comments', 'location')
+
+    def clean_device(self):
+        device = self.cleaned_data.get('device')
+        if device and not device.serial_number:
+            raise forms.ValidationError(
+                "У выбранного оборудования отсутствует серийный номер. "
+                "Пожалуйста, укажите серийный номер в карточке оборудования."
+            )
+        return device
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        
+        # Генерация имени акта
+        if not instance.name and instance.device:
+            date_str = instance.creation_date.strftime("%d%m%Y") if instance.creation_date \
+                      else timezone.now().strftime("%d%m%Y")
+            instance.name = f"АктТ_{instance.device.serial_number}_{date_str}"
+        
+        # Установка создателя
+        if hasattr(self, 'request') and self.request and not instance.user:
+            instance.user = self.request.user
+        
+        if commit:
+            instance.save()
+        return instance
 
 
 
-class ActAddForm(forms.Form):
+# from django import forms
 
-    
-    creation_date = forms.DateField()
-    representative_1 = forms.CharField()
-    representative_2 = forms.CharField()
-    representative_3 = forms.CharField()
-    lpu = forms.ModelChoiceField(required = True, 
-                                label = "CardLPU",
-                                queryset = CardLPU.objects.all(),
-                                widget = forms.Select(attrs = {
-                                    "class": "form-list-field"}
-                                ))
-    device = forms.ModelChoiceField(required = True, 
-                                label = "CardHardware",
-                                queryset = CardHardware.objects.all(),
-                                widget = forms.Select(attrs = {
-                                    "class": "form-list-field"}
-                                ))
-    check_result = forms.CharField(widget=forms.Textarea)
-    probable_ause = forms.CharField(widget=forms.Textarea)
-    conclusion  = forms.CharField(widget=forms.Textarea)
+# from .models import ActT
+
+
+
+# class ActAddForm(forms.ModelForm):
+
+#     class Meta:
+#         model = ActT
+#         fields = ('device', 'lpu', 'check_result', 'probable_ause', 'conclusion', 'comments', 'location')
+

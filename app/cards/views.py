@@ -38,6 +38,8 @@ class AddHardwareView(LoginRequiredMixin, CreateView):
 
 
 
+
+
     # def get_initial(self):
     #     initial = super().get_initial()
     #     initial['name'] = self.request.user.name
@@ -123,6 +125,33 @@ def add_region_ajax(request):
             zip = Region.objects.create(zip=name)
             return JsonResponse({'id': zip.id, 'name': zip.zip})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+
+def get_devices_by_lpu(request):
+    search = request.GET.get('q', '')
+    lpu_id = request.GET.get('lpu_id')
+    
+    if not lpu_id:
+        return JsonResponse({'results': []})
+    
+    devices = CardHardware.objects.filter(lpu_id=lpu_id)
+    
+    if search:
+        devices = devices.filter(name__icontains=search)
+    
+    results = [{'id': d.id, 'text': d.name} for d in devices]
+    return JsonResponse({'results': results})
+
+def get_lpu_options(request):
+    search = request.GET.get('q', '')
+    lpu_list = CardLPU.objects.all()
+    
+    if search:
+        lpu_list = lpu_list.filter(name__icontains=search)
+    
+    results = [{'id': l.id, 'text': l.name} for l in lpu_list]
+    return JsonResponse({'results': results})
 
 
 

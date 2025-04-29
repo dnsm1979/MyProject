@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Подключение CSS библиотек -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+<div class="starter-template text-center py-5 px-3"></div>
+
+<div class="container">
+  <h3 class="text-center">Новый Акт технического состояния оборудования</h3>
+  <div class="card mb-3">
+    <div class="card-body">
+      <form action="{% url 'act_technical:act_add' %}" method="post" id="act_add">
+        {% csrf_token %}
+        <div class="row">
+          <!-- Дата и представители -->
+          <div class="col-md-6 mb-3">
+            <label for="id_creation_date" class="form-label">Дата составления акта:</label>
+            <input type="date" class="form-control" id="id_creation_date"
+              value="{% if form.creation_date.value %}{{ form.creation_date.value|date:'Y-m-d' }}{% else %}{% now 'Y-m-d' %}{% endif %}"
+              name="creation_date" required>
+            {% if form.creation_date.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.creation_date.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+            <input type="text" class="form-control" id="id_representative_1"
+              value="{{ form.representative_1.value|default_if_none:'' }}"
+              name="representative_1">
+            {% if form.representative_1.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_1.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+            <input type="text" class="form-control" id="id_representative_2"
+              value="{{ form.representative_2.value|default_if_none:'' }}"
+              name="representative_2">
+            {% if form.representative_2.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_2.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+            <input type="text" class="form-control" id="id_representative_3"
+              value="{{ form.representative_3.value|default_if_none:'' }}"
+              name="representative_3">
+            {% if form.representative_3.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_3.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- ЛПУ и оборудование -->
+<div class="col-md-6 mb-3">
+  <label for="id_lpu" class="form-label">ЛПУ:</label>
+  <div class="input-group">
+    <select name="lpu" id="id_lpu" class="form-control select2-lpu" data-url="{% url 'cards:get_lpu_options' %}">
+      <option value="">Выберите ЛПУ</option>
+      {% for item in lpu %}
+        <option value="{{ item.id }}" {% if form.lpu.value == item.id|stringformat:"s" %}selected{% endif %}>
+          {{ item.name }}
+        </option>
+      {% endfor %}
+    </select>
+    <a class="btn btn-outline-secondary" href="{% url 'cards:add_lpu' %}">
+      <i class="fas fa-plus"></i> Новое
+    </a>
+  </div>
+  {% if form.lpu.errors %}
+  <div class="alert alert-danger alert-dismissible fade show">{{ form.lpu.errors }}</div>
+  {% endif %}
+</div>
+
+<div class="col-md-6 mb-3">
+  <label for="id_device" class="form-label">Оборудование:</label>
+  <div class="input-group">
+    <select name="device" id="id_device" class="form-control select2-device" 
+            data-url="{% url 'cards:get_devices_by_lpu' %}" 
+            {% if not form.lpu.value %}disabled{% endif %}>
+      <option value="">Сначала выберите ЛПУ</option>
+      {% if form.lpu.value %}
+        {% for d in device %}
+          <option value="{{ d.id }}" {% if form.device.value == d.id|stringformat:"s" %}selected{% endif %}>
+            {{ d.name }}
+          </option>
+        {% endfor %}
+      {% endif %}
+    </select>
+    <a class="btn btn-outline-secondary" href="{% url 'cards:add_hardware' %}" id="add-equipment-btn">
+      <i class="fas fa-plus"></i> Новое
+    </a>
+  </div>
+  {% if form.device.errors %}
+  <div class="alert alert-danger alert-dismissible fade show">{{ form.device.errors }}</div>
+  {% endif %}
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Инициализация Select2 для ЛПУ
+  $('.select2-lpu').select2({
+    placeholder: "Выберите ЛПУ",
+    allowClear: true,
+    width: '100%'
+  });
+
+  // Инициализация Select2 для оборудования
+  $('.select2-device').select2({
+    placeholder: "Выберите оборудование",
+    allowClear: true,
+    width: '100%',
+    {% if not form.lpu.value %}disabled: true,{% endif %}
+    ajax: {
+      url: $('.select2-device').data('url'),
+      dataType: 'json',
+      delay: 250,
+      data: function(params) {
+        return {
+          q: params.term, // поисковый запрос
+          lpu_id: $('#id_lpu').val() // ID выбранного ЛПУ
+        };
+      },
+      processResults: function(data) {
+        return {
+          results: data.results
+        };
+      },
+      cache: true
+    }
+  });
+
+  // Обработчик изменения ЛПУ
+  $('#id_lpu').change(function() {
+    var lpuId = $(this).val();
+    var deviceSelect = $('#id_device');
+    
+    if (lpuId) {
+      // Активируем поле оборудования
+      deviceSelect.prop('disabled', false);
+      
+      // Очищаем и обновляем список оборудования
+      deviceSelect.val(null).trigger('change');
+      
+      // Обновляем ссылку для добавления нового оборудования
+      $('#add-equipment-btn').attr('href', "{% url 'cards:add_hardware' %}?lpu_id=" + lpuId);
+    } else {
+      // Деактивируем поле оборудования
+      deviceSelect.prop('disabled', true).val(null).trigger('change');
+    }
+  });
+
+  // Инициализация при загрузке, если ЛПУ уже выбрано
+  if ($('#id_lpu').val()) {
+    $('#add-equipment-btn').attr('href', "{% url 'cards:add_hardware' %}?lpu_id=" + $('#id_lpu').val());
+  }
+});
+</script>
+
+          {% comment %} <!-- ЛПУ и оборудование -->
+          <div class="col-md-6 mb-3">
+            <label for="id_lpu" class="form-label">ЛПУ:</label>
+            <div class="input-group">
+              <select name="lpu" id="id_lpu" class="form-control select2">
+                <option value="">Выберите из списка</option>
+                {% for item in lpu %}
+                <option value="{{ item.id }}"
+                  {% if form.lpu.value == item.id|stringformat:"s" %}selected{% endif %}>
+                  {{ item.name }}
+                </option>
+                {% endfor %}
+              </select>
+              <a class="btn btn-outline-secondary" href="{% url 'cards:add_lpu' %}">
+                <i class="fas fa-plus"></i> Новое
+              </a>
+            </div>
+            {% if form.lpu.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.lpu.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="id_device" class="form-label">Оборудование:</label>
+            <div class="input-group">
+              <select name="device" id="id_device" class="form-control select2">
+                <option value="">Выберите из списка</option>
+                {% for d in device %}
+                <option value="{{ d.id }}" 
+                {% if form.device.value == d.id|stringformat:"s" %}selected{% endif %}>
+                {{ d.name }}
+              </option>
+                {% endfor %}
+              </select>
+              <a class="btn btn-outline-secondary" href="{% url 'cards:add_hardware' %}">
+                <i class="fas fa-plus"></i> Новое
+              </a>
+            </div>
+            {% if form.device.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.device.errors }}</div>
+            {% endif %}
+          </div> {% endcomment %}
+
+          <!-- Текстовые поля -->
+          <div class="col-md-12 mb-3">
+            <label for="id_check_result" class="form-label">Результаты проверки оборудования:</label>
+            <textarea class="form-control" id="id_check_result" rows="3"
+              name="check_result" required>{{ form.check_result.value|default_if_none:'' }}</textarea>
+            {% if form.check_result.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.check_result.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label for="id_probable_cause" class="form-label">Вероятные причины неисправности:</label>
+            <textarea class="form-control" id="id_probable_cause" rows="3"
+              name="probable_cause">{{ form.probable_cause.value|default_if_none:'' }}</textarea>
+            {% if form.probable_cause.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.probable_cause.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label for="id_conclusion" class="form-label">Заключение:</label>
+            <textarea class="form-control" id="id_conclusion" rows="3"
+              name="conclusion" required>{{ form.conclusion.value|default_if_none:'' }}</textarea>
+            {% if form.conclusion.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">{{ form.conclusion.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Кнопка отправки -->
+          <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-file-alt"></i> Создать акт
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Подключение Font Awesome для иконок -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+  .input-group-text {
+    min-width: 40px;
+    justify-content: center;
+  }
+  textarea.form-control {
+    min-height: 120px;
+  }
+</style>
+
+<script>
+// Автоматическое заполнение текущей даты, если поле пустое
+document.addEventListener('DOMContentLoaded', function() {
+  const dateField = document.getElementById('id_creation_date');
+  if (dateField && !dateField.value) {
+    const today = new Date();
+    dateField.value = today.toISOString().substr(0, 10);
+  }
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="starter-template text-center py-5 px-3"></div>
+
+
+  <div class="container">
+    <h3 class="text-center">Новый Акт технического состояния оборудования</h3>
+    <div class="card mb-3">
+      <div class="card-body">
+
+        <form action="{% url "act_technical:act_add" %}" method="post" id="act_add">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="id_name" class="form-label">Выберите дату:</label>
+              <input type="date" class="form-control" id="id_creation_date"
+                value="{% if form.id_creation_date.value %}{{ form.id_creation_date.value }}{% endif %}"
+                name="id_creation_date" required>
+              {% if form.id_creation_date.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_creation_date.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_representative_1" class="form-label">Представитель ЛПУ 1:</label>
+              <input type="text" class="form-control" id="id_representative_1"
+                value="{% if form.id_representative_1.value %}{{ form.id_representative_1.value }}{% endif %}"
+                name="id_representative_1" required>
+              {% if form.id_representative_1.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_1.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_representative_2" class="form-label">Представитель ЛПУ 2:</label>
+              <input type="text" class="form-control" id="id_representative_2"
+                value="{% if form.id_representative_2.value %}{{ form.id_representative_2.value }}{% endif %}"
+                name="id_representative_2" required>
+              {% if form.id_representative_2.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_2.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
+              <input type="text" class="form-control" id="id_representative_3"
+                value="{% if form.id_representative_3.value %}{{ form.id_representative_3.value }}{% endif %}"
+                name="id_representative_3" required>
+              {% if form.id_representative_3.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_representative_3.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_lpu" class="form-label">Выберете ЛПУ:</label>
+              <input class="form-control" list="datalist_lpu" id="id_lpu" placeholder="Введите для поиска..."
+                value="{% if form.lpu.value %}{{ form.lpu.value }}{% endif %}" name="lpu" required>
+              <datalist id="datalist_lpu">
+                {% for l in lpu %}
+                <option value={{ l.lpu }}></option>
+                {% endfor %}
+              </datalist>
+
+              {% if form.lpu.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.lpu.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="id_device" class="form-label">Выберете оборудование:</label>
+              <input class="form-control" list="datalist_device" id="id_device" placeholder="Введите для поиска..."
+                value="{% if form.id_device.value %}{{ form.id_device.value }}{% endif %}" name="id_device" required>
+              <datalist id="datalist_device">
+                {% for d in device %}
+                <option value={{ d.device }}></option>
+                {% endfor %}
+              </datalist>
+              {% if form.id_device.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_device.errors}}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_lpu" %}" role="button">Новое
+                ЛПУ</a></div>
+            <div class="col-md-6 mb-3"><a class="btn btn-primary" href="{% url "cards:add_hardware" %}"
+                role="button">Новое оборудование</a></div>
+
+            <div class="col-md-12 mb-3">
+
+              <label for="id_check_result" class="form-label">При проверке оборудования выявляно:</label>
+              <textarea class="form-control" id="id_check_result" rows="3"
+                value="{% if form.id_check_result.value %}{{ form.id_check_result.value }}{% endif %}"
+                name="id_check_result" required></textarea>
+              {% if form.id_check_result.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_check_result.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="id_probable_ause" class="form-label">Вероятные причины:</label>
+              <textarea class="form-control" id="id_probable_ause" rows="3"
+                value="{% if form.id_probable_ause.value %}{{ form.id_probable_ause.value }}{% endif %}"
+                name="id_probable_ause" required></textarea>
+              {% if form.id_probable_ause.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_probable_ause.errors}}</div>
+              {% endif %}
+
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="id_conclusion" class="form-label">Заключение:</label>
+              <textarea class="form-control" id="id_conclusion" rows="3"
+                value="{% if form.id_conclusion.value %}{{ form.id_conclusion.value }}{% endif %}" name="id_conclusion"
+                required></textarea>
+              {% if form.id_conclusion.errors %}
+              <div class="alert alert-danger alert-dismissible fade show">{{form.id_conclusion.errors}}</div>
+              {% endif %}
+
+            </div>
+
+          </div>
+          <button type="submit" class="btn btn-primary">Создать</button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+ {% endcomment %}
