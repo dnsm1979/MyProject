@@ -59,47 +59,24 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">№</th>
       <th scope="col">Название</th>
       <th scope="col">ЛПУ</th>
       <th scope="col">Аппарат</th>
       <th scope="col">Дата</th>
-      <th scope="col">Статус</th>
+      <th scope="col">Создал</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>АктТ-12122024-987654</td>
-      <td>ГАУЗ СО ГБ№24</td>
-      <td>Парус</td>
-      <td>12-12-2024</td>
-      <td>готов</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td><a class="nav-link" href="{% url "act_technical:act_change" %}">АктT-15122024-УКРП-093-18</a></td>
-      <td>ГАУЗ СО ГБ№24</td>
-      <td>УниКоРД-МТ-Плюс</td>
-      <td>15-12-2024</td>
-      <td>готов</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>АктТ-08032025-12345</td>
-      <td>ГАУЗ СО ГБ№24</td>
-      <td>Маммоскан</td>
-      <td>08-03-2025</td>
-      <td>доработка</td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td>Отчет-08032025-12345</td>
-      <td>ГАУЗ СО ГБ№24</td>
-      <td>Маммоскан</td>
-      <td>08-03-2025</td>
-      <td>доработка</td>
-    </tr>
+    {% for act in acts %}
+      <tr>
+        <td><a class="nav-link" href="{% url "act_technical:act_change" act.id %}">{{act.name}}</a></td>
+        <td>{{act.lpu}}</td>
+        <td>{{act.device.model}}</td>
+        <td>{{act.creation_date|date:"d.m.Y"}}</td>
+        <td>{{act.user}}</td>
+      </tr>
+    {% endfor %}
+
   </tbody>
 </table>
 {% endblock  %}

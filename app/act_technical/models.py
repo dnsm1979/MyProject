@@ -47,25 +47,3 @@ class ActT(models.Model):
         return self.name or f"АктТ #{self.id}"
     
 
-    # def save(self, *args, **kwargs):
-    #     if not self.pk:  # Только при создании нового объекта
-    #         self.created_by = kwargs.pop('user', None) or (hasattr(self, '_request_user') and self._request_user)
-    #     super().save(*args, **kwargs)
-
-    #     if not self.name and self.device_id:
-    #         device = CardHardware.objects.get(pk=self.device_id)
-    #         date_str = timezone.now().strftime("%d%m%Y")
-    #         self.name = f"АктТ_{device.serial_number}_{date_str}"
-    #     super().save(*args, **kwargs)
-
-
-
-    # class Meta:
-    #     db_table = 'actt'
-    #     verbose_name = "Акт техсостояния"
-    #     verbose_name_plural = "Акты техсостояния"
-    #     ordering = ("id",)
-
-    # def __str__(self):
-    #     return self.name
-

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from act_technical.forms import ActAddForm
 
 from .models import CardHardware, CardLPU, ActT
@@ -41,8 +41,9 @@ class ActAddView(LoginRequiredMixin, CreateView):
 
 
 
-class ActChangeView(TemplateView):
+class ActChangeView(DetailView):
     template_name = 'act_technical/act_change.html'
+    model = ActT
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
