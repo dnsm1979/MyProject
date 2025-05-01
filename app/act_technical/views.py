@@ -44,6 +44,7 @@ class ActAddView(LoginRequiredMixin, CreateView):
 class ActChangeView(DetailView):
     template_name = 'act_technical/act_change.html'
     model = ActT
+    context_object_name = 'actt'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

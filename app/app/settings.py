@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'users.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -153,3 +154,7 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = '/users/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/users/login/'
+
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 30 * 60
