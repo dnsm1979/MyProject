@@ -1,5 +1,7 @@
 from django.utils import timezone
 from django import forms
+
+from cards.models import CardHardware, CardLPU
 from .models import ActT
 
 class ActAddForm(forms.ModelForm):
@@ -52,6 +54,30 @@ class ActAddForm(forms.ModelForm):
             instance.save()
         return instance
 
+
+class ActEditForm(forms.ModelForm):
+    class Meta:
+        model = ActT
+        fields = '__all__'  # Или укажите конкретные поля
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        # Если есть экземпляр (редактирование)
+        if self.instance and self.instance.pk:
+            # Устанавливаем начальные queryset'ы
+            self.fields['lpu'].queryset = CardLPU.objects.filter(
+                organization=user.organization
+            )
+            
+            # Если есть выбранное ЛПУ, фильтруем оборудование
+            if self.instance.lpu:
+                self.fields['device'].queryset = CardHardware.objects.filter(
+                    lpu=self.instance.lpu
+                )
+            else:
+                self.fields['device'].queryset = CardHardware.objects.none()
 
 
 # from django import forms

@@ -8,5 +8,6 @@ urlpatterns = [
 
     path('act_add/', views.ActAddView.as_view(), name='act_add'),
     path('act_change/<int:pk>', views.ActChangeView.as_view(), name='act_change'),
-    path('act_edit/', views.ActEditView.as_view(), name='act_edit'),
+    path('act_edit/<int:pk>', views.ActEditView.as_view(), name='act_edit'),
+    path('act_edit2/<int:pk>', views.ActEdit2View.as_view(), name='act_edit2'),
 ]
