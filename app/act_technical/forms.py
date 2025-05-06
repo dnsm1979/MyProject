@@ -23,10 +23,14 @@ class ActAddForm(forms.ModelForm):
         if self.request and not self.instance.pk:
             self.initial['user'] = self.request.user
 
+        if self.instance.pk and not self.initial.get('creation_date'):
+            self.initial['creation_date'] = self.instance.creation_date.date()
+
+
     class Meta:
         model = ActT
         fields = ('device', 'lpu', 'user', 'check_result', 
-                 'probable_cause', 'conclusion', 'comments', 'location')
+                 'probable_cause', 'conclusion', 'comments', 'creation_date', 'location')
 
     def clean_device(self):
         device = self.cleaned_data.get('device')
@@ -40,11 +44,6 @@ class ActAddForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         
-        # Генерация имени акта
-        if not instance.name and instance.device:
-            date_str = instance.creation_date.strftime("%d%m%Y") if instance.creation_date \
-                      else timezone.now().strftime("%d%m%Y")
-            instance.name = f"АктТ_{instance.device.serial_number}_{date_str}"
         
         # Установка создателя
         if hasattr(self, 'request') and self.request and not instance.user:
@@ -53,42 +52,4 @@ class ActAddForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
-
-class ActEditForm(forms.ModelForm):
-    class Meta:
-        model = ActT
-        fields = '__all__'  # Или укажите конкретные поля
-    
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        
-        # Если есть экземпляр (редактирование)
-        if self.instance and self.instance.pk:
-            # Устанавливаем начальные queryset'ы
-            self.fields['lpu'].queryset = CardLPU.objects.filter(
-                organization=user.organization
-            )
-            
-            # Если есть выбранное ЛПУ, фильтруем оборудование
-            if self.instance.lpu:
-                self.fields['device'].queryset = CardHardware.objects.filter(
-                    lpu=self.instance.lpu
-                )
-            else:
-                self.fields['device'].queryset = CardHardware.objects.none()
-
-
-# from django import forms
-
-# from .models import ActT
-
-
-
-# class ActAddForm(forms.ModelForm):
-
-#     class Meta:
-#         model = ActT
-#         fields = ('device', 'lpu', 'check_result', 'probable_ause', 'conclusion', 'comments', 'location')
 

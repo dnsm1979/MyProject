@@ -49,7 +49,7 @@
           <div class="col-md-6 mb-3">
             <label for="id_representative_3" class="form-label">Представитель ЛПУ 3:</label>
             <input type="text" class="form-control" id="id_representative_3"
-              value="{{ form.representative_3.value|default_if_none:'' }}"
+              value="{{ form.representative_3.value|default_if_none:''  }}"
               name="representative_3">
             {% if form.representative_3.errors %}
             <div class="alert alert-danger alert-dismissible fade show">{{ form.representative_3.errors }}</div>
@@ -62,15 +62,14 @@
             <div class="input-group">
               <select name="lpu" id="id_lpu" class="form-control select2-lpu" data-url="{% url 'cards:get_lpu_options' %}">
                 <option value="">Выберите ЛПУ</option>
-                {% for item in lpu %}
-                  <option value="{{ item.id }}" {% if form.lpu.value == item.id|stringformat:"s" %}selected{% endif %}>
-                    {{ item.name }}
-                  </option>
-                {% endfor %}
+                {% for lpu in form.lpu.field.queryset %}
+                <option value="{{ lpu.id }}" 
+                        {% if lpu.id == selected_lpu %}selected{% endif %}>
+                  {{ lpu.name }}
+                </option>
+              {% endfor %}
               </select>
-              <a class="btn btn-outline-secondary" href="{% url 'cards:add_lpu' %}">
-                <i class="fas fa-plus"></i> Новое
-              </a>
+              
             </div>
             {% if form.lpu.errors %}
             <div class="alert alert-danger alert-dismissible fade show">{{ form.lpu.errors }}</div>
@@ -81,20 +80,19 @@
             <label for="id_device" class="form-label">Оборудование:</label>
             <div class="input-group">
               <select name="device" id="id_device" class="form-control select2-device" 
-                      data-url="{% url 'cards:get_devices_by_lpu' %}" 
-                      {% if not form.lpu.value %}disabled{% endif %}>
-                <option value="">Сначала выберите ЛПУ</option>
-                {% if form.lpu.value %}
-                  {% for d in device %}
-                    <option value="{{ d.id }}" {% if form.device.value == d.id|stringformat:"s" %}selected{% endif %}>
-                      {{ d.name }}
-                    </option>
-                  {% endfor %}
-                {% endif %}
+                      data-url="{% url 'cards:get_devices_by_lpu' %}">
+                      {% if selected_lpu %}
+                      {% for device in form.device.field.queryset %}
+                        <option value="{{ device.id }}" 
+                                {% if device.id == selected_device %}selected{% endif %}>
+                          {{ device.name }}
+                        </option>
+                      {% endfor %}
+                    {% else %}
+                      <option value="">Сначала выберите ЛПУ</option>
+                    {% endif %}
               </select>
-              <a class="btn btn-outline-secondary" href="{% url 'cards:add_hardware' %}" id="add-equipment-btn">
-                <i class="fas fa-plus"></i> Новое
-              </a>
+              
             </div>
             {% if form.device.errors %}
             <div class="alert alert-danger alert-dismissible fade show">{{ form.device.errors }}</div>

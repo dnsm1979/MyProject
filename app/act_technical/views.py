@@ -1,3 +1,5 @@
+from pyexpat.errors import messages
+from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -22,6 +24,7 @@ class ActAddView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def form_valid(self, form):
+        form.instance.generate_act_name()
         # Убедимся, что пользователь установлен
         if not form.instance.user:
             form.instance.user = self.request.user
@@ -65,10 +68,14 @@ class ActEditView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
+        form.instance.generate_act_name()
         # Убедимся, что пользователь установлен
         if not form.instance.user:
             form.instance.user = self.request.user
+
+
         return super().form_valid(form)
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,6 +88,8 @@ class ActEditView(LoginRequiredMixin, UpdateView):
 
         context['device'] = CardHardware.objects.all()
         context['lpu'] = CardLPU.objects.all()
+        context['selected_lpu'] = self.object.lpu_id if self.object.lpu else None
+        context['selected_device'] = self.object.device_id if self.object.device else None
         return context
     
 
@@ -98,10 +107,12 @@ class ActEdit2View(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
+        form.instance.generate_act_name()
         # Убедимся, что пользователь установлен
         if not form.instance.user:
             form.instance.user = self.request.user
         return super().form_valid(form)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
