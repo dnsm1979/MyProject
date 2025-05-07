@@ -1,263 +1,440 @@
-{% extends "base.html" %} 
-{% load static %} 
+{% extends "base.html" %}
+{% load static %}
 {% block content %}
-<div class="starter-template text-center py-5 px-3"></div>
+<div class="print-content">
+<!-- Основной контент акта -->
+<div class="starter-template text-center py-4 px-3"></div>
+<div class="container act-print-container">
+    <div class="container">
+        <div class="row row-custom">
+          <div class="col-4 text-start">
+            <p class="text-center">{{actt.lpu.name}}</p>
+            <p class="text-center">{{actt.lpu.index}}, {{actt.lpu.zip}}, г. {{actt.lpu.city}}, {{actt.lpu.adress}}</p>
+            <p class="text-center">Тел. {{actt.lpu.phone}}</p>
+          </div>
+          <div class="col-4 text-end"></div>
+          <div class="col">
+            <p class="fs-6 text-center">АО ПТП «Медтехника»</p>
+            <p class="text-center">620085, г. Екатеринбург,</p>
+            <p class="text-center"> ул. Учителей, д. 30</p>
+            <p class="text-center">Тел. (343) 380-80-70</p>
+          </div>
+        </div>
+        
+        <div class="starter-template text-center py-4 px-3"></div>
+        
+        <div class="row row-date">
+          <div class="col-3">
+            <p class="text-center text-decoration-underline">г. {{actt.lpu.city}}</p>
+          </div>
+          <div class="col-6"></div>
+          <div class="col-3">
+            <p class="text-center text-decoration-underline">Дата: {{actt.creation_date|date:"d.m.Y\г."}}</p>
+          </div>
+        </div>
+      
+        <div class="row head-container">
+          <h4 class="text-center">АКТ № ____</h4>
+          <h6 class="text-center fw-bold">технического состояния медицинской техники</h6>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <p class="text-start fw-bold">Комиссия в составе:</p>
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">Инженера сервисного центра:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-end fst-italic text-decoration-underline">{{actt.user.last_name}} {{actt.user.first_name}} {{actt.user.surname}}</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">Главного инженера сервисного центра:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-end fst-italic text-decoration-underline">{{ leader.last_name }} {{ leader.first_name }} {{ leader.surname }}</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <p class="text-start">
+              с участием представителя учреждения / владельца
+              _______________________________________
+            </p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <p class="text-start">Проверила техническое состояние: {{actt.device.name}}</p>
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">Модель:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.model}}</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start">заводской номер:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.serial_number}}</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">завод-изготовитель:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.manufacturer}}</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start">страна:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.country}}</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">дата изготовления:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.year_of_manufacture}}</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start">дата продажи:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.year_of_sale}}</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">дата ввода в эксплуатацию:</p>
+          </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.device.commissioning_date}}</p>
+          </div>
+        </div>
+        
+        <div class="starter-template text-center py-2 px-1"></div>
+        
+        <div class="row row-description">
+          <div class="col-auto">
+            <p class="text-start fw-bold">При проверке изделия медицинской техники установлено:</p>
+          </div>
+        
+        
+      
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.check_result}}</p>
+          </div>
+       
+        </div>
+        <div class="starter-template text-center py-2 px-1"></div>
+        
+        <div class="row row-description">
+          <div class="col-auto">
+            <p class="text-start fw-bold">Вероятные причины:</p>
+          </div>
 
-<div class="container">
-  <div class="row">
-    <div class="col-5">
-      <p class="text-center">{{actt.lpu.name}}</p>
-      <p class="text-center">{{actt.lpu.index}}, {{actt.lpu.zip}}, г. {{actt.lpu.city}}, {{actt.lpu.adress}}</p>
-      <p class="text-center">Тел. {{actt.lpu.phone}}</p>
-    </div>
-    <div class="col-2"></div>
-    <div class="col">
-      <p class="fs-6 text-center">АО ПТП «Медтехника»</p>
-      <p class="text-center">620085, г. Екатеринбург, ул. Учителей, д. 30</p>
-      <p class="text-center">Тел. (343) 380-80-70</p>
-    </div>
-  </div>
-  
-  <div class="starter-template text-center py-4 px-3"></div>
-  
-  <div class="row">
-    <div class="col-3">
-      <p class="text-center text-decoration-underline">г. {{actt.lpu.city}}</p>
-    </div>
-    <div class="col-6"></div>
-    <div class="col-3">
-      <p class="text-center text-decoration-underline">Дата: {{actt.creation_date|date:"d.m.Y\г."}}</p>
-    </div>
-  </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.probable_cause}}</p>
+          </div>
+        </div>
+        
+        <div class="starter-template text-center py-2 px-1"></div>
+        
+        <div class="row row-description">
+          <div class="col-auto">
+            <p class="text-start fw-bold">Заключение комиссии:</p>
+          </div>
 
-  <div class="row">
-    <h4 class="text-center">АКТ № ____</h4>
-    <h6 class="text-center fw-bold">технического состояния медицинской техники</h6>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fw-bold">Комиссия в составе:</p>
-    </div>
-  </div>
+          <div class="col-auto">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.conclusion}}</p>
+          </div>
+        </div>
+        
+        <div class="row row-small-text" style="font-size: 8px">
+          <div class="col-12">
+            <p class="text-start lh-sm">Отпечатано в 2-х экземплярах:</p>
+          </div>
+          <div class="col-12">
+            <p class="text-start lh-sm">1. Учреждению /владельцу –1 экз.;</p>
+          </div>
+          <div class="col">
+            <p class="text-start lh-sm">2. Предприятию технического сервиса –1 экз.;</p>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">Представители АО «ПТП «Медтехника»:</p>
+          </div>
+        </div>
+        
+        <div class="row row-agent">
+          <div class="col-7">
+            <p class="text-end">Инженер сервисного центра</p>
+          </div>
+          <div class="col-3">
+            <p class="text-end">_____________</p>
+          </div>
+          <div class="col-2">
+            <p class="text-start fst-italic text-decoration-underline">{{actt.user.last_name}} {{actt.user.first_name|first}} {{actt.user.surname|first}}</p>
+          </div>
+        </div>
+        
+        <div class="row row-agent">
+          <div class="col-7">
+            <p class="text-end">Главный инженер сервисного центра</p>
+          </div>
+          <div class="col-3">
+            <p class="text-end">_____________</p>
+          </div>
+          <div class="col-2">
+            <p class="text-start fst-italic text-decoration-underline">{{ leader.last_name }} {{ leader.first_name|first }} {{ leader.surname|first }}</p>
+          </div>
+        </div>
+        
+        <div class="starter-template text-center py-4 px-3"></div>
+        
+        <div class="row">
+          <div class="col-auto">
+            <p class="text-start">Представители учреждения /владельца:</p>
+          </div>
+        </div>
+        
+        <div class="row row-agent">
+          <div class="col-7">
+            <p class="text-end">__________________________________________</p>
+          </div>
+          <div class="col-3">
+            <p class="text-end">_____________</p>
+          </div>
+          <div class="col-2">
+            <p class="text-start">_____________________</p>
+          </div>
+        </div>
+        
+        <div class="row row-agent">
+          <div class="col-7">
+            <p class="text-end">__________________________________________</p>
+          </div>
+          <div class="col-3">
+            <p class="text-end">_____________</p>
+          </div>
+          <div class="col-2">
+            <p class="text-start">_____________________</p>
+          </div>
+        </div>
+      </div>
+</div>
+</div>
 
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">Представителя сервисного центра:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-end fst-italic text-decoration-underline">{{actt.user}}</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">Главного инженера сервисного центра:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-end fst-italic text-decoration-underline">Р.В.Амурского</p>
-    </div>
-  </div>
-  
+<!-- Кнопки действий (не печатаются) -->
+<div class="container mt-4 no-print">
   <div class="row">
     <div class="col">
-      <p class="text-start">
-        с участием представителя учреждения / владельца
-        _______________________________________
-      </p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start">Проверила техническое состояние: {{actt.device.name}}</p>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">Модель:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.model}}</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start">заводской номер:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.serial_number}}</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">завод-изготовитель:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.manufacturer}}</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start">страна:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.country}}</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">дата изготовления:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.year_of_manufacture}}</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start">дата продажи:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.year_of_sale}}</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">дата ввода в эксплуатацию:</p>
-    </div>
-    <div class="col-auto">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.device.commissioning_date}}</p>
-    </div>
-  </div>
-  
-  <div class="starter-template text-center py-2 px-1"></div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fw-bold">При проверке изделия медицинской техники установлено:</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.check_result}}</p>
-    </div>
-  </div>
-  
-  <div class="starter-template text-center py-2 px-1"></div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fw-bold">Вероятные причины:</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.probable_cause}}</p>
-    </div>
-  </div>
-  
-  <div class="starter-template text-center py-2 px-1"></div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fw-bold">Заключение комиссии:</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.conclusion}}</p>
-    </div>
-  </div>
-  
-  <div class="row" style="font-size: 8px">
-    <div class="col-12">
-      <p class="text-start lh-sm">Отпечатано в 2-х экземплярах:</p>
-    </div>
-    <div class="col-12">
-      <p class="text-start lh-sm">1. Учреждению /владельцу –1 экз.;</p>
-    </div>
-    <div class="col">
-      <p class="text-start lh-sm">2. Предприятию технического сервиса –1 экз.;</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">Представители АО «ПТП «Медтехника»:</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-7">
-      <p class="text-start">Представитель сервисного центра</p>
-    </div>
-    <div class="col-3">
-      <p class="text-end">_____________</p>
-    </div>
-    <div class="col-2">
-      <p class="text-start fst-italic text-decoration-underline">{{actt.user}}</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-7">
-      <p class="text-end">Главный инженер сервисного центра</p>
-    </div>
-    <div class="col-3">
-      <p class="text-end">_____________</p>
-    </div>
-    <div class="col-2">
-      <p class="text-start fst-italic text-decoration-underline">Р.В.Амурский</p>
-    </div>
-  </div>
-  
-  <div class="starter-template text-center py-4 px-3"></div>
-  
-  <div class="row">
-    <div class="col-auto">
-      <p class="text-start">Представители учреждения /владельца:</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-7">
-      <p class="text-start">__________________________________________</p>
-    </div>
-    <div class="col-3">
-      <p class="text-end">_____________</p>
-    </div>
-    <div class="col-2">
-      <p class="text-start fst-italic text-decoration-underline">________________________</p>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-7">
-      <p class="text-end">__________________________________________</p>
-    </div>
-    <div class="col-3">
-      <p class="text-end">_____________</p>
-    </div>
-    <div class="col-2">
-      <p class="text-start fst-italic text-decoration-underline">________________________</p>
+      <a class="btn btn-primary" href="{% url 'act_technical:act_edit' pk=actt.id %}" role="button">
+        <i class="fas fa-edit"></i> Редактировать
+      </a>
+      <a class="btn btn-primary ms-2" href="{% url 'act_technical:act_edit2' pk=actt.id %}" role="button">
+        <i class="fas fa-copy"></i> Сохранить как новый
+      </a>
+      <button type="button" class="btn btn-secondary ms-2" onclick="printAct()">
+        <i class="fas fa-print"></i> Печать
+      </button>
+      <a href="#" class="btn btn-info ms-2">
+        <i class="fas fa-file-pdf"></i> PDF
+      </a>
     </div>
   </div>
 </div>
-<div class="starter-template text-center py-5 px-3"></div>
 
-  <a class="btn btn-primary" href="{% url "act_technical:act_edit" pk=object.id %}" role="button">Редактировать</a>
-  <a class="btn btn-primary" href="{% url "act_technical:act_edit2" pk=object.id %}" role="button">Редактировать и сохранить как новый</a>
-  <button class="btn btn-primary" type="submit">Печать</button>
-  <button class="btn btn-primary" type="submit">Экспорт</button>
-  <div class="starter-template text-center py-3 px-3"></div>
-  <form>
+<!-- Форма комментариев (не печатается) -->
+<div class="no-print">
+<div class="container mt-4 no-print">
+  <form method="post" action="#">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="commentTextarea" class="form-label">Комментарии</label>
+      <textarea class="form-control" id="commentTextarea" name="comment" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+  </form>
+</div>
+</div>
+<!-- Скрипт для печати -->
+<script>
+  function printAct() {
+    // Клонируем контейнер акта
+    const originalContent = document.querySelector('.act-print-container');
+    const printContent = originalContent.cloneNode(true);
+    
+    // Удаляем ненужные элементы
+    printContent.querySelectorAll('.no-print').forEach(el => el.remove());
+    
+    // Создаем окно для печати
+    const printWindow = window.open('', '_blank');
+    
+    // HTML для печати с сохранением структуры
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Акт №{{ actt.id }}</title>
+        <meta charset="UTF-8">
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 10mm 5mm;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: "Times New Roman", serif;
+            font-size: 14pt;
+            line-height: 1.1;
+          }
+          .container {
+            width: 100%;
+            padding: 5px;
+          }
 
-  <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label">Коментарии</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Отправить</button>
-</form>
+          .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -5px;
+            page-break-inside: avoid;
+            }
+          .row-custom{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -35px;
+            margin-left: 15px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            }
+          .row-date {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 15px;
+            margin-bottom: 40px;
+            margin-top: 40px;
+            }
+          .head-container{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 120px;
+            margin-bottom: 40px;
+            margin-top: 40px;
+          }
+          .row-description{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 0px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+          }
+          .row-small-text{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 15px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            }
+          .row-agent{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 0px;
+            margin-left: 0px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+          }
+          .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, 
+          .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+            padding: 0 5px;
+            box-sizing: border-box;
+          }
+          .col-1 { width: 8.33%; }
+          .col-2 { width: 16.66%; }
+          .col-3 { width: 25%; }
+          .col-4 { width: 33.33%; }
+          .col-5 { width: 41.66%; }
+          .col-6 { width: 50%; }
+          .col-7 { width: 58.33%; }
+          .col-8 { width: 66.66%; }
+          .col-9 { width: 75%; }
+          .col-10 { width: 83.33%; }
+          .col-11 { width: 91.66%; }
+          .col-12 { width: 100%; }
+          p {
+            margin-right: 15px;
+            margin-bottom: 2px;
+            margin-top: 0px;
+            padding: 0px;
+          }
+          h4 { font-size: 18pt; margin: 5px 0; }
+          h6 { font-size: 14pt; margin: 8px 0; }
+          .text-center { text-align: center; }
+          .text-start { text-align: left; }
+          .text-end { text-align: right; }
+          .text-decoration-underline { text-decoration: underline; }
+          .fw-bold { font-weight: bold; }
+          .fst-italic { font-style: italic; }
+          .starter-template { height: 2px; }
+        </style>
+      </head>
+      <body>
+        ${printContent.innerHTML}
+        <script>
+          setTimeout(() => {
+            window.print();
+            setTimeout(window.close, 300);
+          }, 200);
+        <\/script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+  </script>
+  
+  <style>
+  /* Стили для экрана */
+  @media screen {
+    .act-print-container {
+      max-width: 210mm;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .no-print {
+      max-width: 210mm;
+      margin: 20px auto;
+    }
+  }
+  </style>
+  
 
 {% endblock %}

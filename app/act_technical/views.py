@@ -1,13 +1,16 @@
 from pyexpat.errors import messages
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 from act_technical.forms import ActAddForm
-from .models import CardHardware, CardLPU, ActT
+from .models import CardHardware, CardLPU, ActT, User
+from django.template.loader import render_to_string
+
+
 
 
 class ActAddView(LoginRequiredMixin, CreateView):
@@ -50,6 +53,7 @@ class ActChangeView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['leader'] = User.objects.filter(position='руководитель').first()
         return context
     
 
@@ -123,3 +127,4 @@ class ActEdit2View(LoginRequiredMixin, UpdateView):
         context['device'] = CardHardware.objects.all()
         context['lpu'] = CardLPU.objects.all()
         return context
+    

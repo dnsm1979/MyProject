@@ -1,5 +1,4 @@
 from django.urls import path
-
 from act_technical import views
 
 app_name = 'act_technical'
