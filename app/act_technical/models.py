@@ -5,6 +5,26 @@ from cards.models import CardLPU, CardHardware
 from users.models import User
 
 
+
+class CommentsActT(models.Model):
+    active = models.BooleanField(default=True, verbose_name="Активность")
+    text = models.TextField(null=True, blank=True, verbose_name='Текст коментария')
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, blank=True, null=True,  verbose_name="Пользователь", default=None)
+    act = models.ForeignKey('ActT', on_delete=models.SET_NULL, blank=True, null=True,  related_name='act_comments')
+    created_at = models.DateTimeField(auto_now=True, verbose_name="Дата коммента")
+
+    class Meta:
+        db_table = 'comments_actt'
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
+        ordering = ("id",)
+
+    def __str__(self):
+        return f"{self.id}"
+
+
+
+
 class ActT(models.Model):
 
     name = models.CharField(max_length=150, verbose_name="Название")
@@ -50,5 +70,7 @@ class ActT(models.Model):
 
     def __str__(self):
         return self.name if self.name else f"АктТ_{self.id or 'новый'}"
+    
+
     
 
