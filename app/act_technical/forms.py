@@ -6,7 +6,6 @@ from .models import ActT
 from .models import ActImage
 from django.forms import widgets
 from django.core.exceptions import ValidationError
-from django.forms import Field
 
 class ActAddForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -60,23 +59,14 @@ class ActAddForm(forms.ModelForm):
 
 
 
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
-
-class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", MultipleFileInput())
-        super().__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        single_file_clean = super().clean
-        if isinstance(data, (list, tuple)):
-            return [single_file_clean(d, initial) for d in data]
-        return [single_file_clean(data, initial)]
-
-class UploadImagesForm(forms.ModelForm):
-    images = MultipleFileField(label='Выберите изображения')
-
+class ActImageForm(forms.ModelForm):
     class Meta:
         model = ActImage
-        fields = ['description']
+        fields = ['image']
+        
+    image = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'image-upload-input',
+            'accept': 'image/*'
+        })
+    )

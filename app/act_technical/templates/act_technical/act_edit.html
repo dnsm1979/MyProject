@@ -128,60 +128,50 @@
           </div>
 
           <!-- Форма загрузки изображений -->
-          <form method="post" enctype="multipart/form-data" action="{% url 'act_technical:act_update' pk=actt.pk %}">
+       <div class="image-upload-container">
+        <form id="image-upload-form" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            <div class="mb-3">
-              <label class="form-label">Добавить изображения</label>
-              <input type="file" 
-                    class="form-control" 
-                    name="images" 
-                    multiple 
-                    accept="image/*">
-            </div>
-            
-            <div class="mb-3">
-              <label class="form-label">Описание (необязательно)</label>
-              <input type="text" 
-                    class="form-control" 
-                    name="description">
-            </div>
-            
-            <button type="submit" class="btn btn-primary">
-              Загрузить изображения
+            <input type="file" name="image" class="d-none" id="image-upload-input">
+            <button type="button" class="btn btn-primary" id="upload-button">
+                Загрузить изображение
             </button>
-          </form>
+        </form>
+        <div class="progress mt-2 d-none" id="upload-progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+    </div>
+
+
+
 
  
-          <!-- Галерея изображений -->
-          <div class="row mt-4">
-            {% for image in images %}
-            <div class="col-md-4 mb-4">
-              <div class="card">
-                <img src="{{ image.image.url }}" 
-                    class="card-img-top" 
-                    alt="Изображение акта">
-                <div class="card-body">
-                  <p class="card-text">
-                    {{ image.description|default:"Без описания" }}
-                  </p>
-                  <small class="text-muted">
-                    {{ image.uploaded_at|date:"d.m.Y H:i" }}
-                  </small>
-                </div>
-              </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-              <div class="alert alert-info">
-                Нет загруженных изображений
-              </div>
-            </div>
-            {% endfor %}
+   <div class="row mt-4" id="image-container">
+      {% for image in object.images.all %}
+      <div class="col-md-4 mb-4 image-item" data-id="{{ image.id }}">
+        <div class="card image-card">  <!-- Добавлен класс image-card -->
+          <img src="{{ image.image.url }}" class="card-img-top" alt="Изображение акта">
+          <div class="card-body">
+            <p class="card-text">
+              {{ image.description|default:"Без описания" }}
+            </p>
+            <small class="text-muted">
+              {{ image.uploaded_at|date:"d.m.Y H:i" }}
+            </small>
+            <button class="btn btn-sm btn-danger delete-image mt-auto" data-id="{{ image.id }}">
+              <i class="fas fa-trash"></i> Удалить
+            </button>
           </div>
-                <a class="btn btn-primary ms-2" href="{% url 'act_technical:act_update' pk=actt.id %}" role="button">
-        <i class="fas fa-copy"></i> Добавить изображения
-      </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">
+          Нет загруженных изображений
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
 
           <!-- Кнопка отправки -->
           <div class="col-12 mt-3">
@@ -203,91 +193,203 @@
 
 <script>
 $(document).ready(function() {
-  // Инициализация Select2 для ЛПУ
-  $('.select2-lpu').select2({
-    placeholder: "Выберите ЛПУ",
-    allowClear: true,
-    width: '100%'
+  // Обработка клика по кнопке загрузки
+  $('#upload-button').click(function() {
+    $('#image-upload-input').click();
   });
-
-  // Инициализация Select2 для оборудования
-  $('.select2-device').select2({
-    placeholder: "Выберите оборудование",
-    allowClear: true,
-    width: '100%',
-    {% if not form.lpu.value %}disabled: true,{% endif %}
-    ajax: {
-      url: $('.select2-device').data('url'),
-      dataType: 'json',
-      delay: 250,
-      data: function(params) {
-        return {
-          q: params.term, // поисковый запрос
-          lpu_id: $('#id_lpu').val() // ID выбранного ЛПУ
-        };
-      },
-      processResults: function(data) {
-        return {
-          results: data.results
-        };
-      },
-      cache: true
+  
+  // Обработка выбора файла
+  $('#image-upload-input').change(function() {
+    if (this.files.length > 0) {
+      uploadImage(this.files[0]); // Берем только первый файл
     }
   });
-
-  // Обработчик изменения ЛПУ
-  $('#id_lpu').change(function() {
-    var lpuId = $(this).val();
-    var deviceSelect = $('#id_device');
+  
+  // Функция загрузки одного изображения
+  function uploadImage(file) {
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('image', file);
     
-    if (lpuId) {
-      // Активируем поле оборудования
-      deviceSelect.prop('disabled', false);
-      
-      // Очищаем и обновляем список оборудования
-      deviceSelect.val(null).trigger('change');
-      
-      // Обновляем ссылку для добавления нового оборудования
-      $('#add-equipment-btn').attr('href', "{% url 'cards:add_hardware' %}?lpu_id=" + lpuId);
-    } else {
-      // Деактивируем поле оборудования
-      deviceSelect.prop('disabled', true).val(null).trigger('change');
+    // Показываем прогресс-бар
+    const progressBar = $('#upload-progress .progress-bar');
+    $('#upload-progress').removeClass('d-none');
+    progressBar.css('width', '0%');
+    
+    $.ajax({
+      url: "{% url 'act_technical:upload_act_image' object.id %}",
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      xhr: function() {
+        const xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function(evt) {
+          if (evt.lengthComputable) {
+            const percentComplete = (evt.loaded / evt.total) * 100;
+            progressBar.css('width', percentComplete + '%');
+            progressBar.attr('aria-valuenow', percentComplete);
+          }
+        }, false);
+        return xhr;
+      },
+      success: function(response) {
+        // Скрываем прогресс-бар
+        $('#upload-progress').addClass('d-none');
+        
+        // Убираем сообщение "Нет изображений", если оно есть
+        $('#image-container .alert.alert-info').remove();
+        
+        // Добавляем новое изображение в галерею
+        const imageHtml = `
+          <div class="col-md-4 mb-4 image-item" data-id="${response.id}">
+            <div class="card image-card">
+              <img src="${response.url}" class="card-img-top" alt="Изображение акта">
+              <div class="card-body">
+                <p class="card-text">Без описания</p>
+                <small class="text-muted">${new Date().toLocaleString()}</small>
+                <button class="btn btn-sm btn-danger delete-image mt-auto" data-id="${response.id}">
+                  <i class="fas fa-trash"></i> Удалить
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        $('#image-container').append(imageHtml);
+        
+        // Очищаем input
+        $('#image-upload-input').val('');
+      },
+      error: function(xhr) {
+        $('#upload-progress').addClass('d-none');
+        alert('Ошибка при загрузке изображения: ' + (xhr.responseJSON?.error || 'Неизвестная ошибка'));
+      }
+    });
+  }
+  
+// Обработка удаления изображения
+$(document).on('click', '.delete-image', function(e) {
+    e.preventDefault(); // Предотвращаем стандартное поведение
+    const imageId = $(this).data('id');
+    const $imageItem = $(`.image-item[data-id="${imageId}"]`);
+    
+    if (confirm('Вы уверены, что хотите удалить это изображение?')) {
+        $.ajax({
+            url: "{% url 'act_technical:delete_act_image' 0 %}".replace('0', imageId),
+            type: 'DELETE',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    $imageItem.remove();
+                    
+                    // Если изображений не осталось, показываем сообщение
+                    if ($('#image-container .image-item').length === 0) {
+                        $('#image-container').html(`
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    Нет загруженных изображений
+                                </div>
+                            </div>
+                        `);
+                    }
+                } else {
+                    alert('Ошибка: ' + (response.error || 'Неизвестная ошибка'));
+                }
+            },
+            error: function(xhr) {
+                console.error('Ошибка AJAX:', xhr);
+                alert('Ошибка при удалении изображения. Проверьте консоль для подробностей.');
+            }
+        });
+    }
+});
+  
+  // Drag and drop функциональность
+  const dropArea = $('.image-upload-container');
+  
+  dropArea.on('dragover', function(e) {
+    e.preventDefault();
+    dropArea.addClass('border border-primary');
+  });
+  
+  dropArea.on('dragleave', function(e) {
+    e.preventDefault();
+    dropArea.removeClass('border border-primary');
+  });
+  
+  dropArea.on('drop', function(e) {
+    e.preventDefault();
+    dropArea.removeClass('border border-primary');
+    const files = e.originalEvent.dataTransfer.files;
+    if (files.length > 0) {
+      uploadImage(files[0]); // Берем только первый файл
     }
   });
-
-  // Инициализация при загрузке, если ЛПУ уже выбрано
-  if ($('#id_lpu').val()) {
-    $('#add-equipment-btn').attr('href', "{% url 'cards:add_hardware' %}?lpu_id=" + $('#id_lpu').val());
-  }
-
-  // Автоматическое заполнение текущей даты
-  const dateField = document.getElementById('id_creation_date');
-  if (dateField && !dateField.value) {
-    const today = new Date();
-    dateField.value = today.toISOString().substr(0, 10);
-  }
 });
 </script>
-
-
 <style>
-.bi.spin {
-    animation: spin 1s linear infinite;
+/* Галерея изображений */
+.image-gallery {
+  margin: 20px 0;
 }
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+
+/* Карточка изображения */
+.image-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
-</style>
 
-<style>
-  .input-group-text {
-    min-width: 40px;
-    justify-content: center;
-  }
-  textarea.form-control {
-    min-height: 120px;
-  }
-</style>
+.image-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
 
+/* Изображение в карточке */
+.image-card .card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  background: #f8f9fa;
+}
+
+/* Тело карточки */
+.image-card .card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+/* Кнопка удаления */
+.image-card .delete-image {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+  .image-card .card-img-top {
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .image-card .card-img-top {
+    height: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .image-card .card-img-top {
+    height: 120px;
+  }
+}
+ </style>
 {% endblock %}

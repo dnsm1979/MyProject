@@ -1,12 +1,12 @@
 
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
-from .forms import ActAddForm, UploadImagesForm
+from .forms import ActAddForm, ActImageForm
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .models import CardHardware, CardLPU, ActT, User, CommentsActT, ActImage
@@ -14,6 +14,10 @@ from .models import CardHardware, CardLPU, ActT, User, CommentsActT, ActImage
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import os
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods
 
 
 
@@ -47,6 +51,9 @@ class ActAddView(LoginRequiredMixin, CreateView):
         context['device'] = CardHardware.objects.all()
         context['lpu'] = CardLPU.objects.all()
         return context
+    
+
+
 
 
 
@@ -66,12 +73,51 @@ class ActChangeView(LoginRequiredMixin, DetailView):
         return context
     
 
+def upload_act_image(request, pk):
+    if request.method == 'POST':
+        act = ActT.objects.get(pk=pk)
+        file = request.FILES.get('image')
+        
+        if not file:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+        
+        image = ActImage(act=act, image=file)
+        image.save()
+        
+        return JsonResponse({
+            'id': image.id,
+            'url': image.image.url,
+            'name': image.image.name.split('/')[-1]
+        }, status=201)
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@require_http_methods(["DELETE"])
+def delete_act_image(request, pk):
+    try:
+        image = ActImage.objects.get(pk=pk)
+        image_url = image.image.url  # Сохраняем URL перед удалением
+        image.delete()
+        return JsonResponse({
+            'success': True,
+            'message': 'Изображение успешно удалено',
+            'deleted_id': pk,
+            'image_url': image_url
+        })
+    except ActImage.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Изображение не найдено'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
 
 class ActEditView(LoginRequiredMixin, UpdateView):
     template_name = 'act_technical/act_edit.html'
     model = ActT
     form_class = ActAddForm
-    success_url = reverse_lazy('main:index')
+    
+    def get_success_url(self):
+        return reverse('act_technical:act_change', kwargs={'pk': self.object.pk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -137,39 +183,7 @@ class ActEdit2View(LoginRequiredMixin, UpdateView):
 
 
 
-class ActUpdateView(LoginRequiredMixin, UpdateView):
-    model = ActImage
-    template_name = 'act_technical/act_edit.html'  # Изменил шаблон
-    form_class = UploadImagesForm
 
-    def get_success_url(self):
-        # Возвращаем URL текущего акта вместо главной страницы
-        return reverse_lazy('act_technical:act_edit', kwargs={'pk': self.object.pk})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['image_form'] = UploadImagesForm()
-        context['images'] = self.object.images.all()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        image_form = UploadImagesForm(request.POST, request.FILES)
-        
-        if 'images' in request.FILES:
-            files = request.FILES.getlist('images')
-            for file in files:
-                ActImage.objects.create(
-                    act=self.object,
-                    image=file,
-                    description=request.POST.get('description', '')
-                )
-            messages.success(request, 'Изображения успешно загружены')
-            return redirect(self.get_success_url())
-        
-        messages.error(request, 'Ошибка загрузки изображений')
-        return self.form_invalid(form)
 
 # class ActUpdateView(LoginRequiredMixin, UpdateView):
 #     model = ActT
