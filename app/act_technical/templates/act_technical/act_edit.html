@@ -127,6 +127,62 @@
             {% endif %}
           </div>
 
+          <!-- Форма загрузки изображений -->
+          <form method="post" enctype="multipart/form-data" action="{% url 'act_technical:act_update' pk=actt.pk %}">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+              <label class="form-label">Добавить изображения</label>
+              <input type="file" 
+                    class="form-control" 
+                    name="images" 
+                    multiple 
+                    accept="image/*">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Описание (необязательно)</label>
+              <input type="text" 
+                    class="form-control" 
+                    name="description">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+              Загрузить изображения
+            </button>
+          </form>
+
+ 
+          <!-- Галерея изображений -->
+          <div class="row mt-4">
+            {% for image in images %}
+            <div class="col-md-4 mb-4">
+              <div class="card">
+                <img src="{{ image.image.url }}" 
+                    class="card-img-top" 
+                    alt="Изображение акта">
+                <div class="card-body">
+                  <p class="card-text">
+                    {{ image.description|default:"Без описания" }}
+                  </p>
+                  <small class="text-muted">
+                    {{ image.uploaded_at|date:"d.m.Y H:i" }}
+                  </small>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+              <div class="alert alert-info">
+                Нет загруженных изображений
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+                <a class="btn btn-primary ms-2" href="{% url 'act_technical:act_update' pk=actt.id %}" role="button">
+        <i class="fas fa-copy"></i> Добавить изображения
+      </a>
+
           <!-- Кнопка отправки -->
           <div class="col-12 mt-3">
             <button type="submit" class="btn btn-primary btn-lg">
@@ -143,6 +199,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="{% static 'js/upload.js' %}"></script>
 
 <script>
 $(document).ready(function() {
@@ -211,6 +268,17 @@ $(document).ready(function() {
   }
 });
 </script>
+
+
+<style>
+.bi.spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
 
 <style>
   .input-group-text {

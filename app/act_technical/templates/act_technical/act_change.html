@@ -321,6 +321,32 @@
       </button>
     </form>
   </div>
+    <!-- Галерея изображений -->
+  <div class="row mt-4">
+    {% for image in images %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img src="{{ image.image.url }}" 
+            class="card-img-top" 
+            alt="Изображение акта">
+        <div class="card-body">
+          <p class="card-text">
+            {{ image.description|default:"Без описания" }}
+          </p>
+          <small class="text-muted">
+            {{ image.uploaded_at|date:"d.m.Y H:i" }}
+          </small>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info">
+        Нет загруженных изображений
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 <!-- Скрипт для печати -->
 <script>

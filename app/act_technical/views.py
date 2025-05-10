@@ -1,20 +1,20 @@
-from pyexpat.errors import messages
-from django.utils import timezone
-from django.http import HttpResponse, JsonResponse
+
+from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView
+from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
-from act_technical.forms import ActAddForm
+from .forms import ActAddForm, UploadImagesForm
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .models import CardHardware, CardLPU, ActT, User, CommentsActT
-from django.template.loader import render_to_string
+from .models import CardHardware, CardLPU, ActT, User, CommentsActT, ActImage
+
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import os
-from io import BytesIO
+
 
 
 
@@ -62,6 +62,7 @@ class ActChangeView(LoginRequiredMixin, DetailView):
         act = self.object
         context['leader'] = User.objects.filter(position='руководитель').first()
         context['comments'] = CommentsActT.objects.filter(act=act).order_by('-created_at')
+        context['images'] = ActImage.objects.filter(act=act).order_by('-uploaded_at')
         return context
     
 
@@ -97,6 +98,8 @@ class ActEditView(LoginRequiredMixin, UpdateView):
         context['lpu'] = CardLPU.objects.all()
         context['selected_lpu'] = self.object.lpu_id if self.object.lpu else None
         context['selected_device'] = self.object.device_id if self.object.device else None
+        context['image_form'] = ActAddForm()
+        context['images'] = self.object.images.all()
         return context
     
 
@@ -134,6 +137,73 @@ class ActEdit2View(LoginRequiredMixin, UpdateView):
 
 
 
+class ActUpdateView(LoginRequiredMixin, UpdateView):
+    model = ActImage
+    template_name = 'act_technical/act_edit.html'  # Изменил шаблон
+    form_class = UploadImagesForm
+
+    def get_success_url(self):
+        # Возвращаем URL текущего акта вместо главной страницы
+        return reverse_lazy('act_technical:act_edit', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_form'] = UploadImagesForm()
+        context['images'] = self.object.images.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        image_form = UploadImagesForm(request.POST, request.FILES)
+        
+        if 'images' in request.FILES:
+            files = request.FILES.getlist('images')
+            for file in files:
+                ActImage.objects.create(
+                    act=self.object,
+                    image=file,
+                    description=request.POST.get('description', '')
+                )
+            messages.success(request, 'Изображения успешно загружены')
+            return redirect(self.get_success_url())
+        
+        messages.error(request, 'Ошибка загрузки изображений')
+        return self.form_invalid(form)
+
+# class ActUpdateView(LoginRequiredMixin, UpdateView):
+#     model = ActT
+#     template_name = 'act_technical/act_edit.html'
+#     form_class = UploadImagesForm
+
+#     def get_success_url(self):
+#         # Возвращаем URL текущего акта вместо главной страницы
+#         return reverse_lazy('act_technical:act_change', kwargs={'pk': self.object.pk})
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['image_form'] = UploadImagesForm()
+#         context['images'] = self.object.images.all()
+#         return context
+
+#     def post(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         form = self.get_form()
+#         image_form = UploadImagesForm(request.POST, request.FILES)
+        
+#         if 'images' in request.FILES:
+#             files = request.FILES.getlist('images')
+#             for file in files:
+#                 ActImage.objects.create(
+#                     act=self.object,
+#                     image=file,
+#                     description=request.POST.get('description', '')
+#                 )
+#             messages.success(request, 'Изображения успешно загружены')
+#             return redirect(self.get_success_url())
+        
+#         messages.error(request, 'Ошибка загрузки изображений')
+#         return self.form_invalid(form)
 
 
 
@@ -199,24 +269,6 @@ def export_act_pdf(request, pk):
     
     return response
 
-
-
-# @login_required
-# def add_comment_to_act(request, pk):
-#     act = get_object_or_404(ActT, pk=pk)
-#     if request.method == 'POST':
-#         comment_text = request.POST.get('comment', '').strip()
-#         if comment_text:
-#             CommentsActT.objects.create(
-#                 act=act,
-#                 user=request.user,
-#                 text=comment_text,
-#                 active=True
-#             )
-#             messages.success(request, 'Комментарий успешно сохранен')
-#         else:
-#             messages.error(request, 'Комментарий не может быть пустым')
-#     return redirect('act_technical/act_change', pk=pk)
 
 
 @login_required

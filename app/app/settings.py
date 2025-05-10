@@ -146,6 +146,12 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# Максимальный размер загружаемых файлов (25MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 25
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 25
+
+# Разрешенные типы файлов
+FILE_UPLOAD_ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
