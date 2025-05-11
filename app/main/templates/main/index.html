@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+{% load param_replace %}
+
 {% block body %}
 </li>
 <li class="nav-item dropdown">
@@ -10,74 +12,164 @@
     <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
   </ul>
 </li>
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Фильтр</a>
-  <div class="dropdown-menu">
-    <form class="px-4 py-3">
-      <div class="form-floating">
-        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-          <option selected>ЛПУ</option>
-          <option value="1">ГАУЗ СО ГБ№24</option>
-          <option value="2">ГАУЗ СО ГБ№36</option>
-          <option value="3">ГАУЗ СО ГБ№7</option>
-        </select>
 
-      </div>
-      <div class="mb-6">
-          <label for="date">Выберите дату от</label>
-          <input type="date" id="date">
-          <label for="date">до</label>
-          <input type="date" id="date">
-      </div>
-      <div class="mb-3">
-
-      </div>
-      <button type="submit" class="btn btn-primary">Применить</button>
-    </form>
-
-  </div>
-</li>
 </ul>
           
-<form class="d-flex justify-content-sm-end">
-  <input
-    class="form-control mr-2"
-    type="search"
-    placeholder="Поиск"
-    aria-label="Search"
-  />
-  <button class="btn btn-outline-success" type="submit">ОК</button>
-</form>
+
 {% endblock  %}
+
 
 {% block content %}
 <div class="starter-template text-center py-5 px-3">
   <img src="{% static '\images\1.png' %}" class="img-fluid" alt="logo">
   <p class="lead">База оформленных документов</p>
 </div>
+<div class="container mt-4">
+    <!-- Форма фильтрации -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Фильтры</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <!-- Поиск -->
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="q" 
+                           placeholder="Поиск..." value="{{ current_filters.q }}">
+                </div>
+                
+                <!-- ЛПУ -->
+                <div class="col-md-2">
+                    <select class="form-select" name="lpu">
+                        <option value="">Все ЛПУ</option>
+                        {% for lpu in all_lpus %}
+                        <option value="{{ lpu.id }}" 
+                                {% if current_filters.lpu == lpu.id|stringformat:"s" %}selected{% endif %}>
+                            {{ lpu.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Создатель -->
+                <div class="col-md-2">
+                    <select class="form-select" name="creator">
+                        <option value="">Все создатели</option>
+                        {% for creator in all_creators %}
+                        <option value="{{ creator.id }}"
+                                {% if current_filters.creator == creator.id|stringformat:"s" %}selected{% endif %}>
+                            {{ creator.get_full_name|default:creator.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Даты -->
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Дата от</span>
+                        <input type="date" class="form-control" name="date_from" 
+                               value="{{ current_filters.date_from }}">
+                        <span class="input-group-text">до</span>
+                        <input type="date" class="form-control" name="date_to" 
+                               value="{{ current_filters.date_to }}">
+                    </div>
+                </div>
+                
+                <!-- Кнопки -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-filter"></i> Применить
+                    </button>
+                    <a href="{% url 'main:index' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Сбросить
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Название</th>
-      <th scope="col">ЛПУ</th>
-      <th scope="col">Аппарат</th>
-      <th scope="col">Дата</th>
-      <th scope="col">Создал</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for act in acts %}
-      <tr>
-        <td><a class="nav-link" href="{% url "act_technical:act_change" act.id %}">{{act.name}}</a></td>
-        <td>{{act.lpu}}</td>
-        <td>{{act.device.model}}</td>
-        <td>{{act.creation_date|date:"d.m.Y"}}</td>
-        <td>{{act.user}}</td>
-      </tr>
-    {% endfor %}
+    <!-- Таблица с актами -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <!-- Заголовки таблицы -->
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>ЛПУ</th>
+                    <th>Аппарат</th>
+                    <th>Дата</th>
+                    <th>Создал</th>
+                </tr>
+            </thead>
+            <!-- Данные таблицы -->
+            <tbody>
+                {% for act in page_obj %}
+                <tr>
+                    <td><a href="{% url 'act_technical:act_change' act.id %}">{{ act.name }}</a></td>
+                    <td>{{ act.lpu.name }}</td>
+                    <td>{{ act.device.model }}</td>
+                    <td>{{ act.creation_date|date:"d.m.Y" }}</td>
+                    <td>{{ act.user.get_full_name|default:act.user.username }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Нет актов для отображения</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-  </tbody>
-</table>
-{% endblock  %}
+    <!-- Пагинация с сохранением фильтров -->
 
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% param_replace page=1 %}">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number %}">&lsaquo;</a>
+                </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item"><a class="page-link" href="?{% param_replace page=num %}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% param_replace page=page_obj.next_page_number %}">&rsaquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% param_replace page=page_obj.paginator.num_pages %}">&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <div class="text-center text-muted mt-2">
+        Показано с {{ page_obj.start_index }} по {{ page_obj.end_index }} из {{ page_obj.paginator.count }} актов
+    </div>
+</div>
+<style>
+/* Стили для формы фильтрации */
+.filter-form .input-group-text {
+    min-width: 80px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .filter-form .col-md-2, 
+    .filter-form .col-md-3 {
+        margin-bottom: 10px;
+    }
+}
+</style>
+
+{% endblock %}
