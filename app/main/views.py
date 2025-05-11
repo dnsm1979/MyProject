@@ -24,7 +24,7 @@ class IndexView(LoginRequiredMixin, ListView):
             has_active_comments=Exists(
                 CommentsActT.objects.filter(
                     act=OuterRef('pk'),
-                    active=True  # Исправлено: закрывающая скобка для filter
+                    active=True
                 )
             ),
             has_images=Exists(
@@ -33,7 +33,7 @@ class IndexView(LoginRequiredMixin, ListView):
                 )
             )
         )
-        return queryset
+        
 
         
         
