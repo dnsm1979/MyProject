@@ -4,10 +4,10 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def param_replace(context, **kwargs):
-    """
-    Возвращает параметры URL с обновленными значениями
-    """
     params = context['request'].GET.copy()
     for key, value in kwargs.items():
-        params[key] = value
+        if value:
+            params[key] = value
+        else:
+            params.pop(key, None)
     return params.urlencode()
