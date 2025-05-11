@@ -26,7 +26,7 @@ class ActAddView(LoginRequiredMixin, CreateView):
     template_name = 'act_technical/act_add.html'
     model = ActT
     form_class = ActAddForm
-    success_url = reverse_lazy('main:index')
+
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -37,10 +37,18 @@ class ActAddView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.generate_act_name()
-        # Убедимся, что пользователь установлен
         if not form.instance.user:
             form.instance.user = self.request.user
-        return super().form_valid(form)
+        
+        response = super().form_valid(form)
+        
+        # Проверяем, какая кнопка была нажата
+        if 'save_and_new' in self.request.POST:
+            return redirect(reverse('act_technical:act_add'))  # Перенаправляем на страницу создания нового акта
+        return response
+    
+    def get_success_url(self):
+        return reverse('act_technical:act_change', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

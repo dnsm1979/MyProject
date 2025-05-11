@@ -252,77 +252,71 @@
 <div class="container mt-4 no-print">
   <div class="row">
     <div class="col">
-      <a class="btn btn-primary" href="{% url 'act_technical:act_edit' pk=actt.id %}" role="button">
-        <i class="fas fa-edit"></i> Редактировать
-      </a>
-      <a class="btn btn-primary ms-2" href="{% url 'act_technical:act_edit2' pk=actt.id %}" role="button">
-        <i class="fas fa-copy"></i> Сохранить как новый
-      </a>
-      <button type="button" class="btn btn-secondary ms-2" onclick="printAct()">
-        <i class="fas fa-print"></i> Печать
-      </button>
-      <a href="{% url 'act_technical:act_pdf' pk=actt.id %}" class="btn btn-info ms-2">
-        <i class="fas fa-file-pdf"></i> PDF
-      </a>
+      <div class="d-flex flex-wrap gap-2 align-items-center">  <!-- Добавлен align-items-center -->
+        <!-- Основные кнопки -->
+        <a class="btn btn-primary" href="{% url 'act_technical:act_edit' pk=actt.id %}">
+          <i class="fas fa-edit"></i> Редактировать
+        </a>
+        <a class="btn btn-primary" href="{% url 'act_technical:act_edit2' pk=actt.id %}">
+          <i class="fas fa-copy"></i> Сохранить как новый
+        </a>
+        <button type="button" class="btn btn-secondary" onclick="printAct()">
+          <i class="fas fa-print"></i> Печать
+        </button>
+        <a href="{% url 'act_technical:act_pdf' pk=actt.id %}" class="btn btn-info">
+          <i class="fas fa-file-pdf"></i> PDF
+        </a>
+        
+        <!-- Кнопка управления комментариями -->
+        <div class="d-inline-block">  <!-- Обертка для фиксации позиции -->
+          <button id="toggleCommentsBtn" class="btn btn-outline-secondary">
+            <i class="fas fa-comments"></i> Комментарии
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Форма комментариев (не печатается) -->
 <div class="no-print">
-  <div class="container mt-4">
-    <label for="commentTextarea" class="form-label">Комментарии к акту</label>
-    <div class="accordion" id="accordionPanelsStayOpenExample">
-      <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-            Раскрыть комментарии
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-          <div class="accordion-body">
-              <div class="comments-section">
-                {% for comment in comments %}
-                <div class="comment-item mb-3 p-3 border rounded">
-                  <div class="comment-text">
-                    {{ comment.text|linebreaksbr }}  {# Сохраняем переносы строк #}
-                  </div>
-                  <div class="comment-meta text-muted small mt-2">
-                    <span class="comment-author">
-                      <i class="fas fa-user"></i> {{ comment.user.get_full_name|default:comment.user.username }}
-                    </span>
-                    <span class="comment-date ml-3">
-                      <i class="far fa-clock"></i> {{ comment.created_at|date:"d.m.Y H:i" }}
-                    </span>
-                  </div>
-                </div>
-                {% empty %}
-                <div class="no-comments text-muted">
-                  Пока нет комментариев
-                </div>
-                {% endfor %}
-              </div>
-            </div>
+  <div class="container mt-4" id="commentsSection">
+    <div id="commentsContainer">
+      <div class="comments-section">
+        {% for comment in comments %}
+        <div class="comment-item mb-3 p-3 border rounded">
+          <div class="comment-text">
+            {{ comment.text|linebreaksbr }}
+          </div>
+          <div class="comment-meta text-muted small mt-2">
+            <span class="comment-author">
+              <i class="fas fa-user"></i> {{ comment.user.get_full_name|default:comment.user.username }}
+            </span>
+            <span class="comment-date ms-3">
+              <i class="far fa-clock"></i> {{ comment.created_at|date:"d.m.Y H:i" }}
+            </span>
           </div>
         </div>
-      
-      
-    </div>
-    <form method="post" action="{% url 'act_technical:add_comment_to_act' actt.id %}">
-      {% csrf_token %}
-      <div class="mb-3">
-        
-        <textarea class="form-control" 
-                 id="commentTextarea" 
-                 name="comment" 
-                 rows="3"
-                 placeholder="Введите ваш комментарий здесь..."></textarea>
+        {% empty %}
+        <div class="no-comments text-muted">Пока нет комментариев</div>
+        {% endfor %}
       </div>
-      <button type="submit" class="btn btn-primary">
-        <i class="fas fa-save"></i> Сохранить комментарий
-      </button>
-    </form>
+      
+      <form method="post" action="{% url 'act_technical:add_comment_to_act' actt.id %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <textarea class="form-control" name="comment" rows="3"
+                    placeholder="Введите ваш комментарий здесь..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> Сохранить комментарий
+        </button>
+      </form>
+    </div>
   </div>
+</div>
+
+
     <!-- Контейнер с изображениями -->
   <div class="row" id="imageGallery">
     {% for image in actt.images.all %}
@@ -572,6 +566,26 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 });
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn = document.getElementById('toggleCommentsBtn');
+  const commentsSection = document.getElementById('commentsSection');
+  
+  if (toggleBtn && commentsSection) {
+    toggleBtn.addEventListener('click', function() {
+      if (commentsSection.style.display === 'none') {
+        commentsSection.style.display = 'block';
+        toggleBtn.innerHTML = '<i class="fas fa-comments"></i> Комментарии';
+        toggleBtn.classList.replace('btn-outline-primary', 'btn-outline-secondary');
+      } else {
+        commentsSection.style.display = 'none';
+        toggleBtn.innerHTML = '<i class="fas fa-comments"></i> Комментарии';
+        toggleBtn.classList.replace('btn-outline-secondary', 'btn-outline-primary');
+      }
+    });
+  }
+});
+</script>
   <style>
   /* Стили для экрана */
   @media screen {
@@ -617,6 +631,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .card-img-top:hover {
   transform: scale(1.02);
+}
+/* Дополнительные стили для кнопок */
+.d-flex.flex-wrap {
+  gap: 0.5rem;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-primary {
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.comments-section {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .d-flex.flex-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+/* Фиксируем высоту контейнера кнопок */
+.no-print .container.mt-4 {
+  min-height: 50px;
+}
+
+/* Плавное скрытие/показ */
+#commentsSection {
+  transition: all 0.3s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .d-flex.flex-wrap {
+    gap: 0.5rem;
+  }
 }
   </style>
   
