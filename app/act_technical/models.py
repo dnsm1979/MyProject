@@ -13,6 +13,11 @@ class CommentsActT(models.Model):
     act = models.ForeignKey('ActT', on_delete=models.SET_NULL, blank=True, null=True,  related_name='act_comments')
     created_at = models.DateTimeField(auto_now=True, verbose_name="Дата коммента")
 
+    def toggle_active(self):
+        self.active = not self.active
+        self.save()
+        return self.active
+
     class Meta:
         db_table = 'comments_actt'
         verbose_name = 'Коментарий'

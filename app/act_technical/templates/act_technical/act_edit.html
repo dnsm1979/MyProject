@@ -126,6 +126,36 @@
             <div class="alert alert-danger alert-dismissible fade show">{{ form.conclusion.errors }}</div>
             {% endif %}
           </div>
+        <!-- Комментарии -->
+          <div class="comments-section">
+              {% for comment in comments %}
+              <div class="comment-item mb-3 p-3 border rounded">
+                  <div class="d-flex justify-content-between align-items-start">
+                      <div class="comment-text flex-grow-1">
+                          {{ comment.text|linebreaksbr }}
+                          <div class="comment-meta text-muted small mt-2">
+                              <span class="comment-author">
+                                  <i class="fas fa-user"></i> {{ comment.user.get_full_name|default:comment.user.username }}
+                              </span>
+                              <span class="comment-date ms-3">
+                                  <i class="far fa-clock"></i> {{ comment.created_at|date:"d.m.Y H:i" }}
+                              </span>
+                          </div>
+                      </div>
+                      <div class="form-check form-switch ms-3">
+                          <input class="form-check-input comment-toggle" 
+                                type="checkbox" 
+                                data-comment-id="{{ comment.id }}"
+                                id="commentSwitch{{ comment.id }}"
+                                {% if comment.active %}checked{% endif %}>
+                          <label class="form-check-label" for="commentSwitch{{ comment.id }}"></label>
+                      </div>
+                  </div>
+              </div>
+              {% empty %}
+              <div class="no-comments text-muted">Нет комментариев</div>
+              {% endfor %}
+          </div>
 
           <!-- Форма загрузки изображений -->
        <div class="image-upload-container">
@@ -329,6 +359,38 @@ $(document).on('click', '.delete-image', function(e) {
   });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.comment-toggle').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const commentId = this.dataset.commentId;
+            const isActive = this.checked;
+            
+            const toggleUrl = "{% url 'act_technical:toggle_comment_active' 0 %}".replace('0', commentId);
+            fetch(toggleUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    this.checked = !isActive; // Возвращаем в исходное состояние при ошибке
+                    alert('Ошибка обновления статуса комментария');
+                }
+            })
+            .catch(error => {
+                this.checked = !isActive;
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
 <style>
 /* Галерея изображений */
 .image-gallery {
@@ -390,6 +452,23 @@ $(document).on('click', '.delete-image', function(e) {
   .image-card .card-img-top {
     height: 120px;
   }
+}
+.comment-item {
+    transition: background-color 0.3s ease;
+}
+
+.comment-toggle {
+    cursor: pointer;
+    transform: scale(1.3);
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.comment-item:hover {
+    background-color: #f8f9fa;
 }
  </style>
 {% endblock %}

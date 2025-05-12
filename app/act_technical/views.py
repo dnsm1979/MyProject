@@ -132,6 +132,7 @@ class ActEditView(LoginRequiredMixin, UpdateView):
         if not kwargs.get('instance'):
             kwargs['initial'] = kwargs.get('initial', {})
             kwargs['initial']['user'] = self.request.user
+            
         return kwargs
 
     def form_valid(self, form):
@@ -146,6 +147,7 @@ class ActEditView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        act = self.object
         context['title'] = 'Редактирование акта технического состояния'
         context['order'] = True
         context['device'] = CardHardware.objects.all()
@@ -154,6 +156,7 @@ class ActEditView(LoginRequiredMixin, UpdateView):
         context['selected_device'] = self.object.device_id if self.object.device else None
         context['image_form'] = ActAddForm()
         context['images'] = self.object.images.all()
+        context['comments'] = CommentsActT.objects.filter(act=act).order_by('-created_at')
         return context
     
 
@@ -307,3 +310,18 @@ def add_comment_to_act(request, pk):
             )
 
     return redirect('act_technical:act_change', pk=pk)
+
+@require_POST
+@login_required
+def toggle_comment_active(request, comment_id):
+    try:
+        comment = CommentsActT.objects.get(id=comment_id, act__user=request.user)
+        comment.active = not comment.active
+        comment.save()
+        return JsonResponse({
+            'success': True,
+            'active': comment.active,
+            'comment_id': comment_id
+        })
+    except CommentsActT.DoesNotExist:
+        return JsonResponse({'success': False}, status=404)
