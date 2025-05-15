@@ -142,12 +142,12 @@
                               </span>
                           </div>
                       </div>
-                      <div class="form-check form-switch ms-3">
+                      <div class="form-check ms-3">
                           <input class="form-check-input comment-toggle" 
                                 type="checkbox" 
                                 data-comment-id="{{ comment.id }}"
                                 id="commentSwitch{{ comment.id }}"
-                                {% if comment.active %}checked{% endif %}>
+                                {% if comment.active %}Default{% else %}Checked{% endif %}>
                           <label class="form-check-label" for="commentSwitch{{ comment.id }}"></label>
                       </div>
                   </div>

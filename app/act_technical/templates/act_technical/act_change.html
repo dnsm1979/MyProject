@@ -284,11 +284,11 @@
     <div id="commentsContainer">
       <div class="comments-section">
         {% for comment in comments %}
-        <div class="comment-item mb-3 p-3 border rounded {% if not comment.is_active %}inactive-comment{% endif %}">
+        <div class="comment-item mb-3 p-3 border rounded {% if not comment.active %}comment-inactive{% endif %}" 
+             data-comment-id="{{ comment.id }}" 
+             data-is-active="{{ comment.active|yesno:'true,false' }}">
           <div class="comment-text">
-            {% if not comment.is_active %}<s>{% endif %}
-              {{ comment.text|linebreaksbr }}
-            {% if not comment.is_active %}</s>{% endif %}
+            {{ comment.text|linebreaksbr }}
           </div>
           <div class="comment-meta text-muted small mt-2">
             <span class="comment-author">
@@ -297,9 +297,9 @@
             <span class="comment-date ms-3">
               <i class="far fa-clock"></i> {{ comment.created_at|date:"d.m.Y H:i" }}
             </span>
-            {% if not comment.is_active %}
-            <span class="comment-status ms-3 text-danger">
-              <i class="fas fa-ban"></i> Неактивен
+            {% if not comment.active %}
+            <span class="comment-status ms-3 text-success">
+              <i class="fas fa-check-square"></i> Выполнен!
             </span>
             {% endif %}
           </div>
@@ -682,6 +682,14 @@ document.addEventListener('DOMContentLoaded', function() {
   .d-flex.flex-wrap {
     gap: 0.5rem;
   }
+}
+.comment-inactive .comment-text {
+  opacity: 0.6;
+  color: #6c757d;
+}
+.comment-inactive {
+  background-color: #f8f9fa;
+  border-color: #dee2e6 !important;
 }
   </style>
   
