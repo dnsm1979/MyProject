@@ -3,14 +3,15 @@
 {% load param_replace %}
 
 {% block body %}
-</li>
+<li class="nav-item">
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Создать новый акт</a>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
-    <li><a class="dropdown-item" href="{% url "act_technical:act_add" %}">Акт технического состояния</a></li>
-    <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
-  </ul>
+    <a class="nav-link dropdown-toggle btn btn-primary text-white" data-bs-toggle="dropdown" href="#" role="button"
+        aria-expanded="false">Новый акт</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
+        <li><a class="dropdown-item" href="{% url "act_technical:act_add" %}">Акт технического состояния</a></li>
+        <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
+    </ul>
 </li>
 
 </ul>

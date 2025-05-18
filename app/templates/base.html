@@ -4,18 +4,17 @@
 <html lang="ru" prefix="og: http://ogp.me/ns#">
   <head>
     {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %} 
-   
   </head>
  
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <div class="container-fluid">
-        <div class="btn-group">
+        <div class="d-flex w-100">
           {% if user.is_authenticated %}
-          <ul class="nav nav-tabs">
+          <ul class="nav nav-tabs me-auto">
             <li class="nav-item">
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ user.username }}</a>
+                <a class="nav-link dropdown-toggle btn btn-primary text-white" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ user.username }}</a>
                 <ul class="dropdown-menu">
                   {% if user.is_admin or user.is_staff %}
                   <li><a class="dropdown-item" href="{% url "admin:index" %}">Администрирование</a></li>
@@ -26,20 +25,30 @@
               </li>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "main:index" %}">Главная</a>
-              {% endif %}
-              {% block body %}{% endblock body %}
-            
-
+              <a class="nav-link btn btn-primary text-white" href="{% url "main:index" %}">Главная</a>
+            </li>
+            {% block body %}{% endblock body %}
+        </ul>
         
-          
+        <div class="ms-auto">
+            <div class="btn-group">
+                <button type="button" class="btn btn-dark dropdown-toggle position-relative" data-bs-toggle="dropdown" aria-expanded="false">
+                    Уведомления<span class="badge text-warning">4</span>
+                    
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
         </div>
+        {% endif %}
+    </div>
       </div>
-
     </nav>
 
     <main class="container">
-
         {% block content %}{% endblock %}
     </main>
     
