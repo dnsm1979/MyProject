@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'cards',
     'users',
     'image_manager',
+    'notifications',
 
     
     
@@ -63,6 +64,7 @@ MIDDLEWARE = [
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'users.middleware.SessionTimeoutMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -78,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notifications.context_processors.notifications_context',
             ],
         },
     },

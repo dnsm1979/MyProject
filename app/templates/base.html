@@ -33,13 +33,29 @@
         <div class="ms-auto">
             <div class="btn-group">
                 <button type="button" class="btn btn-dark dropdown-toggle position-relative" data-bs-toggle="dropdown" aria-expanded="false">
-                    Уведомления<span class="badge text-warning">4</span>
+                    Уведомлений: <span class="badge text-warning" id="notificationBadge">
+                      {{ unread_notifications_count }}
+                    </span>
                     
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                {% for notification in notifications %}
+                <li class="notification-item">
+                <a class="dropdown-item d-flex align-items-start py-2" 
+                   href="{{ notification.absolute_url }}"
+                   data-notification-id="{{ notification.id }}">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ notification.name }}</strong>
+                            <small class="text-muted ms-2">{{ notification.created_at|timesince }}</small>
+                        </div>
+                        <div class="text-wrap">{{ notification.text }}</div>
+                    </div>
+                    
+                </a>
+            </li>
+           
+            {% endfor %}
                 </ul>
             </div>
         </div>
@@ -51,6 +67,22 @@
     <main class="container">
         {% block content %}{% endblock %}
     </main>
-    
-  </body>
+    <script>
+      // Функция для обновления счетчика
+      function updateNotificationCount() {
+        fetch('/notifications/count/')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('notificationBadge').textContent = data.unread_count;
+          });
+      }
+      // Обновляем при загрузке страницы
+      document.addEventListener('DOMContentLoaded', updateNotificationCount);
+      // Обновляем каждые 60 секунд
+      setInterval(updateNotificationCount, 60000);
+      // Для WebSocket/SignalR реального времени:
+      // const socket = new WebSocket('ws://yourdomain/notifications/');
+      // socket.onmessage = function(e) { updateNotificationCount(); }
+    </script>
+    </body>
 </html>

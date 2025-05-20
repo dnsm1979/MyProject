@@ -6,6 +6,8 @@ from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
+
+from notifications.views import CreateNotificationView
 from .forms import ActAddForm, ActImageForm
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -196,40 +198,6 @@ class ActEdit2View(LoginRequiredMixin, UpdateView):
 
 
 
-# class ActUpdateView(LoginRequiredMixin, UpdateView):
-#     model = ActT
-#     template_name = 'act_technical/act_edit.html'
-#     form_class = UploadImagesForm
-
-#     def get_success_url(self):
-#         # Возвращаем URL текущего акта вместо главной страницы
-#         return reverse_lazy('act_technical:act_change', kwargs={'pk': self.object.pk})
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['image_form'] = UploadImagesForm()
-#         context['images'] = self.object.images.all()
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         form = self.get_form()
-#         image_form = UploadImagesForm(request.POST, request.FILES)
-        
-#         if 'images' in request.FILES:
-#             files = request.FILES.getlist('images')
-#             for file in files:
-#                 ActImage.objects.create(
-#                     act=self.object,
-#                     image=file,
-#                     description=request.POST.get('description', '')
-#                 )
-#             messages.success(request, 'Изображения успешно загружены')
-#             return redirect(self.get_success_url())
-        
-#         messages.error(request, 'Ошибка загрузки изображений')
-#         return self.form_invalid(form)
-
 
 
 def link_callback(uri, rel):
@@ -308,6 +276,11 @@ def add_comment_to_act(request, pk):
                 text=comment_text,
                 active=True
             )
+
+
+            notification_view = CreateNotificationView()
+            notification_view.request = request
+            notification_view.post(request, act.id)
 
     return redirect('act_technical:act_change', pk=pk)
 
