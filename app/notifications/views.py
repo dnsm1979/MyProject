@@ -6,8 +6,9 @@ from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from act_technical.models import ActT
+from act_technical.models import ActT, CommentsActT
 from .models import Notifications
+
 
 class CreateNotificationView(LoginRequiredMixin, View):
     """Оптимизированный view для создания уведомлений"""
@@ -28,10 +29,12 @@ class CreateNotificationView(LoginRequiredMixin, View):
             id=act_id
         )
         
+        last_comment = CommentsActT.objects.filter(act=act).order_by('-created_at').first()
+
         # Используем bulk_create если нужно создавать много уведомлений
         notification = Notifications.objects.create(
             user=act.user,
-            text='Комментарии к акту',  # Убрал f-string, так как нет переменных
+            text=last_comment.text if last_comment else "Новый комментарий",
             name=act.name[:255],  # Ограничение на случай длинных имен
             absolute_url=self._get_absolute_url(act),
             read=False
@@ -53,3 +56,31 @@ class NotificationCountView(LoginRequiredMixin, View):
     def get(self, request):
         count = request.user.notifications.filter(read=False).count()
         return JsonResponse({'unread_count': count})
+    
+
+class DeleteNotificationView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        try:
+            notification = request.user.notifications.get(pk=pk)
+            notification.delete()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+class ClearAllNotificationsView(LoginRequiredMixin, View):
+    def post(self, request):
+        deleted_count, _ = Notifications.objects.filter(user=request.user).delete()
+        return JsonResponse({
+            'status': 'success',
+            'deleted_count': deleted_count
+        })
+    
+class MarkNotificationReadView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        try:
+            notification = request.user.notifications.get(pk=pk)
+            notification.read = True
+            notification.save()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

@@ -10,5 +10,12 @@ class Notifications(models.Model):
     read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
+
+    class Meta:
+        db_table = 'notifications_notifications'
+        verbose_name = 'Уведомление'
+        verbose_name_plural = 'Уведомления'
+        ordering = ("id",)
+
     def __str__(self):
         return f'{self.id}'

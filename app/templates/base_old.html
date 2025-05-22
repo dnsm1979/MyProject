@@ -1,0 +1,195 @@
+{% load static %}
+
+
+
+
+<!DOCTYPE html>
+<html lang="ru" prefix="og: http://ogp.me/ns#">
+  <head>
+    {% load static bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %} 
+    {% csrf_token %}
+    
+  </head>
+ 
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <div class="d-flex w-100">
+          {% if user.is_authenticated %}
+          <ul class="nav nav-tabs me-auto">
+            <li class="nav-item">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle btn btn-primary text-white" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ user.username }}</a>
+                <ul class="dropdown-menu">
+                  {% if user.is_admin or user.is_staff %}
+                  <li><a class="dropdown-item" href="{% url "admin:index" %}">Администрирование</a></li>
+                  <li><a class="dropdown-item" href="{% url "users:registration" %}">Регистрация пользователя</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="{% url "users:logout" %}">Выход</a></li>
+                </ul>
+              </li>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-primary text-white" href="{% url "main:index" %}">Главная</a>
+            </li>
+            {% block body %}{% endblock body %}
+        </ul>
+        
+        <div class="ms-auto">
+          <div class="btn-group">
+            <button type="button" class="btn btn-dark dropdown-toggle position-relative" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Уведомлений: <span class="badge text-warning" id="notificationBadge">
+                {{ unread_notifications_count }}
+              </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+            <li class="text-end pe-3">
+                <button class="btn btn-sm btn-link text-danger p-0" id="clearAllNotifications">
+                    Удалить все
+                </button>
+            </li>
+              {% for notification in notifications %}
+              <li class="notification-item">
+                <a class="dropdown-item d-flex align-items-start py-2" href="{{ notification.absolute_url }}"
+                  data-notification-id="{{ notification.id }}">
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                      <strong>{{ notification.name }}</strong>
+                      <small class="text-muted ms-2">{{ notification.created_at|timesince }}</small>
+                    </div>
+                    <div class="text-wrap">{{ notification.text }}</div>
+                                        <button class="btn btn-sm btn-link text-danger delete-notification ms-2 align-self-center">
+                        <i class="bi bi-x"></i>
+                    </button>
+                  </div>
+
+                </a>
+              </li>
+
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endif %}
+    </div>
+      </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+<style>
+    .notification-item {
+        transition: all 0.3s ease;
+    }
+    .notification-item.removing {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    .delete-notification {
+        margin-left: 10px;
+    }
+    </style>
+<script>
+    // Глобальная переменная с CSRF токеном
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // Удаление одного уведомления
+    document.addEventListener('click', function(e) {
+        // Обработка удаления одного уведомления
+        if (e.target.closest('.delete-notification')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.delete-notification');
+            const notificationId = btn.dataset.notificationId;
+            const notificationItem = btn.closest('.notification-item');
+            
+            if (confirm('Вы уверены, что хотите удалить это уведомление?')) {
+                notificationItem.classList.add('removing');
+                
+                fetch(`/notifications/${notificationId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Ошибка сети');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        setTimeout(() => {
+                            notificationItem.remove();
+                            updateNotificationCounter();
+                        }, 300);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    notificationItem.classList.remove('removing');
+                    alert('Не удалось удалить уведомление');
+                });
+            }
+        }
+    });
+
+    // Удаление всех уведомлений
+    document.getElementById('clearAllNotifications').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (confirm('Вы уверены, что хотите удалить все уведомления?')) {
+            fetch('/notifications/clear-all/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка сети');
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    document.querySelectorAll('.notification-item').forEach(item => {
+                        item.classList.add('removing');
+                        setTimeout(() => item.remove(), 300);
+                    });
+                    document.getElementById('notificationBadge').textContent = '0';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Не удалось удалить уведомления');
+            });
+        }
+    });
+
+    // Обновление счетчика
+    function updateNotificationCounter() {
+        const count = document.querySelectorAll('.notification-item:not(.removing)').length;
+        const badge = document.getElementById('notificationBadge');
+        badge.textContent = count;
+        
+        // Если уведомлений нет, показываем сообщение
+        if (count === 0 && !document.querySelector('.dropdown-item.text-muted')) {
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            const emptyMsg = document.createElement('li');
+            emptyMsg.className = 'dropdown-item text-muted text-center';
+            emptyMsg.textContent = 'Нет уведомлений';
+            dropdownMenu.appendChild(emptyMsg);
+        }
+    }
+    </script>
+
+
+
+    </body>
+</html>

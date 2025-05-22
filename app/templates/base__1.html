@@ -60,7 +60,7 @@
                     <strong>{{ notification.name }}</strong>
                     <small class="text-muted ms-2">{{ notification.created_at|timesince }}</small>
                   </div>
-                  <div class="text-wrap">{{ notification.text|truncatechars:50 }}</div>
+                  <div class="text-wrap">{{ notification.text }}</div>
                 </a>
                 <button class="btn btn-sm btn-outline-danger delete-notification ms-2"
                   data-notification-id="{{ notification.id }}" title="Удалить">
