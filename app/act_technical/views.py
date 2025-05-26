@@ -7,7 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from notifications.views import CreateNotificationView
+from notifications.models import Notifications
+from notifications.views import CreateNotCommRepView, CreateNotificationView
 from .forms import ActAddForm, ActImageForm
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -288,13 +289,56 @@ def add_comment_to_act(request, pk):
 @login_required
 def toggle_comment_active(request, comment_id):
     try:
-        comment = CommentsActT.objects.get(id=comment_id, act__user=request.user)
+        # Получаем комментарий и связанный акт за один запрос
+        comment = CommentsActT.objects.select_related('act').get(
+            id=comment_id,
+            act__user=request.user  # Проверка прав на изменение
+        )
         comment.active = not comment.active
         comment.save()
+        
+        # Создаем уведомление
+        notification = Notifications.objects.create(
+            user=comment.user,  # Автор комментария получает уведомление
+            name=f"Изменение статуса комментария в акте {comment.act.name}",
+            text=f"Комментарий отмечен как {'Выполнен!' if not comment.active else 'активный'}",
+            absolute_url=f"{reverse('act_technical:act_change', args=[comment.act.id])}#comment-{comment.id}",
+            read=False
+        )
+        
         return JsonResponse({
             'success': True,
             'active': comment.active,
-            'comment_id': comment_id
+            'comment_id': comment_id,
+            'notification_id': notification.id
         })
     except CommentsActT.DoesNotExist:
-        return JsonResponse({'success': False}, status=404)
+        return JsonResponse({'success': False, 'error': 'Комментарий не найден'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+
+
+
+# def toggle_comment_active(request, comment_id):
+#     try:
+#         comment = CommentsActT.objects.select_related('act').get(
+#             id=comment_id, 
+#             act__user=request.user  # Проверка, что пользователь - автор акта
+#         )
+#         comment.active = not comment.active
+#         comment.save()
+        
+#         notification_view = CreateNotCommRepView()
+#         notification_view.request = request
+#         notification_view.post(request, comment)
+
+
+#         return JsonResponse({
+#             'success': True,
+#             'active': comment.active,
+#             'comment_id': comment_id
+#         })
+#     except CommentsActT.DoesNotExist:
+#         return JsonResponse({'success': False}, status=404)

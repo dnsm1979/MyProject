@@ -20,8 +20,8 @@ class CreateNotificationView(LoginRequiredMixin, View):
     
     def post(self, request, act_id):
         # Быстрая проверка прав
-        if not request.user.has_perm('notifications.add_notifications'):
-            raise PermissionDenied("У вас нет прав на создание уведомлений")
+        # if not request.user.has_perm('notifications.add_notifications'):
+        #     raise PermissionDenied("У вас нет прав на создание уведомлений")
         
         # Используем select_related для оптимизации запроса
         act = get_object_or_404(
@@ -84,3 +84,65 @@ class MarkNotificationReadView(LoginRequiredMixin, View):
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        
+
+class CreateNotCommRepView(LoginRequiredMixin, View):
+    """Создание уведомлений о комментариях"""
+    
+    def post(self, request, act_id, comment_id):
+        try:
+            act = get_object_or_404(ActT, id=act_id)
+            comment = get_object_or_404(CommentsActT, id=comment_id, act=act)
+            
+            notification = Notifications.objects.create(
+                user=comment.user,
+                name=f"Изменение в акте {act.name}",
+                text=f"Выполнен!",
+                absolute_url=f"{reverse('act_technical:act_change', args=[act.id])}#comment-{comment.id}",
+                read=False
+            )
+            
+            return JsonResponse({
+                'status': 'success',
+                'notification_id': notification.id
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)
+        
+
+
+    # def post(self, request, comment):
+    #     # Быстрая проверка прав
+    #     if not request.user.has_perm('notifications.add_notifications'):
+    #         raise PermissionDenied("У вас нет прав на создание уведомлений")
+        
+    #     # Используем select_related для оптимизации запроса
+    #     act = get_object_or_404(
+    #         CommentsActT.objects.select_related('act'),
+    #         id=comment
+    #     )
+
+        
+
+    #     # Используем bulk_create если нужно создавать много уведомлений
+    #     notification = Notifications.objects.create(
+    #         user=comment.user,
+    #         text= "Акт отредактирован",
+    #         name=comment.act[:255],  # Ограничение на случай длинных имен
+    #         absolute_url=self._get_absolute_url(act),
+    #         read=False
+    #     )
+        
+    #     return JsonResponse({
+    #         'status': 'success',
+    #         'notification_id': notification.id,
+    #         'created_at': notification.created_at.isoformat() if hasattr(notification, 'created_at') else None
+    #     })
+    
+    # def _get_absolute_url(self, act):
+    #     """Получение URL с кешированием"""
+    #     # Можно добавить кеширование, если URL часто запрашивается
+    #     return reverse('act_technical:act_change', kwargs={'pk': act.id})

@@ -3,7 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    position  = models.CharField(max_length=150, unique=True, verbose_name='Должность')
+    position = models.CharField(
+    max_length=150,
+    blank=True,
+    null=True,
+    unique=False,
+    verbose_name='Должность',
+    default=None
+)
     phone_number = models.CharField(max_length=10, blank=True, null=True)
     surname  = models.CharField(max_length=150, unique=True, verbose_name='Отчество')
 
