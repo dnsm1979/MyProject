@@ -255,12 +255,14 @@
     <div class="col">
       <div class="d-flex flex-wrap gap-2 align-items-center">  <!-- Добавлен align-items-center -->
         <!-- Основные кнопки -->
+        {% if user.profcategory.profcategory in 'engineers administrators' %}
         <a class="btn btn-primary" href="{% url 'act_technical:act_edit' pk=actt.id %}">
           <i class="fas fa-edit"></i> Редактировать
         </a>
         <a class="btn btn-primary" href="{% url 'act_technical:act_edit2' pk=actt.id %}">
           <i class="fas fa-copy"></i> Сохранить как новый
         </a>
+        {% endif %}
         <button type="button" class="btn btn-secondary" onclick="printAct()">
           <i class="fas fa-print"></i> Печать
         </button>
@@ -312,7 +314,7 @@
     </div>
   </div>
 </div>
-      
+      {% if user.profcategory.profcategory in 'managers administrators' %}
       <form method="post" action="{% url 'act_technical:add_comment_to_act' actt.id %}">
         {% csrf_token %}
         <div class="mb-3">
@@ -323,6 +325,7 @@
           <i class="fas fa-save"></i> Сохранить комментарий
         </button>
       </form>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -406,12 +409,12 @@
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Акт №{{ actt.id }}</title>
+        
         <meta charset="UTF-8">
         <style>
           @page {
             size: A4 portrait;
-            margin: 10mm 5mm;
+            margin: 0mm 5mm;
           }
           body {
             margin: 0;

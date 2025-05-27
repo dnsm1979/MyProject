@@ -2,22 +2,6 @@
 {% load static %}
 {% load param_replace %}
 
-{% block body %}
-<li class="nav-item">
-<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle btn btn-primary text-white" data-bs-toggle="dropdown" href="#" role="button"
-        aria-expanded="false">Новый акт</a>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Акт ввода в эксплуатацию</a></li>
-        <li><a class="dropdown-item" href="{% url "act_technical:act_add" %}">Акт технического состояния</a></li>
-        <li><a class="dropdown-item" href="#">Отчет о выполненой работе</a></li>
-    </ul>
-</li>
-
-</ul>
-          
-
-{% endblock  %}
 
 
 {% block content %}
@@ -53,6 +37,7 @@
                 </div>
                 
                 <!-- Создатель -->
+                 {% if user.profcategory.profcategory in 'managers administrators' %}
                 <div class="col-md-2">
                     <select class="form-select" name="creator">
                         <option value="">Все создатели</option>
@@ -64,6 +49,7 @@
                         {% endfor %}
                     </select>
                 </div>
+                {% endif %}
                 
                 <!-- Даты -->
                 <div class="col-md-3">
@@ -125,6 +111,7 @@
             <!-- Данные таблицы -->
             <tbody>
                 {% for act in page_obj %}
+                {% if user.profcategory.profcategory != 'engineers' or act.user == user %}
                 <tr>
                     <td>
                         {% if act.has_active_comments %}
@@ -143,6 +130,7 @@
 
 
                 </tr>
+                {% endif %}
                 {% empty %}
                 <tr>
                     <td colspan="5" class="text-center">Нет актов для отображения</td>

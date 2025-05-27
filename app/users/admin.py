@@ -2,9 +2,9 @@ from django.contrib import admin
 # from carts.admin import CartTabAdmin
 # from orders.admin import OrderTabulareAdmin
 
-from users.models import User
+from users.models import User, UserCategory
 
-# admin.site.register(User)
+admin.site.register(UserCategory)
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
