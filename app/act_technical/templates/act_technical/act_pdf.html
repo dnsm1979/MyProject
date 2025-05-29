@@ -1,121 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Акт №{{ actt.id }}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
     <style>
         @page {
-            size: A4;
-            margin: 1.5cm;
-        }
-        body {
-            font-size: 12pt;
-            line-height: 1.5;
-        }
-        
-        .container {
-          width: 100%;
-          padding: 5px;
-        }
+            size: A4 portrait;
+            margin: 0mm 5mm;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: "Times New Roman", serif;
+            font-size: 14pt;
+            line-height: 1.1;
+          }
+          .container {
+            width: 100%;
+            padding: 5px;
+            margin-left: -15px;
+            margin-right: -35px;
+          }
 
-        .row {
-          display: flex;
-          flex-wrap: wrap;
-          margin: 0 15px;
-          page-break-inside: avoid;
+          .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 15px;
+            page-break-inside: avoid;
+            }
+          .row-custom{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -35px;
+            margin-left: 15px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            }
+          .row-date {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 15px;
+            margin-bottom: 40px;
+            margin-top: 40px;
+            }
+            .col-1{
+            display: inline-block;
+            width: 30%;
+            }
+            .col-head{
+            display: inline-block;
+            width: 30%;
+            }
+            .col-komissiy{
+            display: inline-block;
+            }
+            .col-device-card{
+            display: inline-block;
+            }
+            .col-podpisi{
+            display: inline-block;
+            width: 30%;
+            }
+          
+          
+          .row-description{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 15px;
+            margin-bottom: 20px;
+            margin-top: 20px;
           }
-        .row-custom{
-          display: flex;
-          flex-wrap: wrap;
-          margin-right: -35px;
-          margin-left: 15px;
-          margin-bottom: 20px;
-          margin-top: 20px;
+          .row-small-text{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 15px;
+            margin-left: 15px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            }
+          .row-agent{
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: 0px;
+            margin-left: 0px;
+            margin-bottom: 10px;
+            margin-top: 10px;
           }
-        .row-date {
-          display: flex;
-          flex-wrap: wrap;
-          margin-right: 15px;
-          margin-left: 15px;
-          margin-bottom: 40px;
-          margin-top: 40px;
+          .head-container{
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 20px;
           }
-        .head-container{
-          display: flex;
-          flex-wrap: wrap;
-          margin-right: 15px;
-          margin-left: 120px;
-          margin-bottom: 40px;
-          margin-top: 40px;
-        }
-        .row-description{
-          display: flex;
-          flex-wrap: wrap;
-          margin-right: 15px;
-          margin-left: 15px;
-          margin-bottom: 20px;
-          margin-top: 20px;
-        }
-        .row-small-text{
-          display: flex;
-          flex-wrap: wrap;
-          margin-right: 15px;
-          margin-left: 15px;
-          margin-bottom: 20px;
-          margin-top: 20px;
+           
+          .comment-item {
+    background-color: #f8f9fa;
+  }
+
+          p {
+            margin-right: 15px;
+            margin-bottom: 2px;
+            margin-top: 0px;
+            padding: 0px;
           }
-        .row-agent{
-          display: flex;
-          flex-wrap: wrap;
-          margin-right: 0px;
-          margin-left: 0px;
-          margin-bottom: 10px;
-          margin-top: 10px;
-        }
-        .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, 
-        .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
-          padding: 0 5px;
-          box-sizing: border-box;
-        }
-        .col-1 { width: 8.33%; }
-        .col-2 { width: 16.66%; }
-        .col-3 { width: 25%; }
-        .col-4 { width: 33.33%; }
-        .col-5 { width: 41.66%; }
-        .col-6 { width: 50%; }
-        .col-7 { width: 58.33%; }
-        .col-8 { width: 66.66%; }
-        .col-9 { width: 75%; }
-        .col-10 { width: 83.33%; }
-        .col-11 { width: 91.66%; }
-        .col-12 { width: 100%; }
-        p {
-          margin-right: 15px;
-          margin-bottom: 2px;
-          margin-top: 0px;
-          padding: 0px;
-        }
-        h4 { font-size: 18pt; margin: 5px 0; }
-        h6 { font-size: 14pt; margin: 8px 0; }
-        .text-center { text-align: center; }
-        .text-start { text-align: left; }
-        .text-end { text-align: right; }
-        .text-decoration-underline { text-decoration: underline; }
-        .fw-bold { font-weight: bold; }
-        .fst-italic { font-style: italic; }
-        .starter-template { height: 2px; }
+          h4 { font-size: 18pt; margin: 5px 0; }
+          h6 { font-size: 14pt; margin: 8px 0; }
+          .text-center { text-align: center; }
+          .text-start { text-align: left; }
+          .text-end { text-align: right; }
+          .text-decoration-underline { text-decoration: underline; }
+          .fw-bold { font-weight: bold; }
+          .fst-italic { font-style: italic; }
+          .starter-template { height: 2px; }
+
       </style>
+
+<!-- Основной контент акта -->
 </head>
+
 <body>
     <div class="container">
         <div class="row row-custom">
-          <div class="col-4 text-start">
+          <div class="col-head text-start ">
             <p class="text-center">{{actt.lpu.name}}</p>
             <p class="text-center">{{actt.lpu.index}}, {{actt.lpu.zip}}, г. {{actt.lpu.city}}, {{actt.lpu.adress}}</p>
             <p class="text-center">Тел. {{actt.lpu.phone}}</p>
           </div>
-          <div class="col-4 text-end"></div>
-          <div class="col">
+          <div class="col-head text-end"></div>
+          <div class="col-head" style="margin-right: -35px;">
             <p class="fs-6 text-center">АО ПТП «Медтехника»</p>
             <p class="text-center">620085, г. Екатеринбург,</p>
             <p class="text-center"> ул. Учителей, д. 30</p>
@@ -126,18 +143,22 @@
         <div class="starter-template text-center py-4 px-3"></div>
         
         <div class="row row-date">
-          <div class="col-3">
+          <div class="col-1"">
             <p class="text-center text-decoration-underline">г. {{actt.lpu.city}}</p>
           </div>
-          <div class="col-6"></div>
-          <div class="col-3">
+          <div class="col-1"></div>
+          <div class="col-1">
             <p class="text-center text-decoration-underline">Дата: {{actt.creation_date|date:"d.m.Y\г."}}</p>
           </div>
         </div>
       
         <div class="row head-container">
+        <div class="col" style="display: inline-block;">
           <h4 class="text-center">АКТ № ____</h4>
+          </div>
+          <div class="col" style="display: inline-block;">
           <h6 class="text-center fw-bold">технического состояния медицинской техники</h6>
+          </div>
         </div>
         
         <div class="row">
@@ -147,19 +168,19 @@
         </div>
       
         <div class="row">
-          <div class="col-auto">
+          <div class="col-komissiy">
             <p class="text-start">Инженера сервисного центра:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-komissiy">
             <p class="text-end fst-italic text-decoration-underline">{{actt.user.last_name}} {{actt.user.first_name}} {{actt.user.surname}}</p>
           </div>
         </div>
         
         <div class="row">
-          <div class="col-auto">
+          <div class="col-komissiy">
             <p class="text-start">Главного инженера сервисного центра:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-komissiy">
             <p class="text-end fst-italic text-decoration-underline">{{ leader.last_name }} {{ leader.first_name }} {{ leader.surname }}</p>
           </div>
         </div>
@@ -174,61 +195,61 @@
         </div>
         
         <div class="row">
-          <div class="col">
+          <div class="co-device-card">
             <p class="text-start">Проверила техническое состояние: {{actt.device.name}}</p>
           </div>
         </div>
       
         <div class="row">
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">Модель:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.model}}</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">заводской номер:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.serial_number}}</p>
           </div>
         </div>
         
         <div class="row">
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">завод-изготовитель:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.manufacturer}}</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">страна:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.country}}</p>
           </div>
         </div>
         
         <div class="row">
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">дата изготовления:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.year_of_manufacture}}</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">дата продажи:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.year_of_sale}}</p>
           </div>
         </div>
         
         <div class="row">
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start">дата ввода в эксплуатацию:</p>
           </div>
-          <div class="col-auto">
+          <div class="col-device-card">
             <p class="text-start fst-italic text-decoration-underline">{{actt.device.commissioning_date}}</p>
           </div>
         </div>
@@ -290,25 +311,25 @@
         </div>
         
         <div class="row row-agent">
-          <div class="col-7">
+          <div class="col-podpisi" style="display: inline-block; width: 50%;">
             <p class="text-end">Инженер сервисного центра</p>
           </div>
-          <div class="col-3">
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
             <p class="text-end">_____________</p>
           </div>
-          <div class="col-2">
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
             <p class="text-start fst-italic text-decoration-underline">{{actt.user.last_name}} {{actt.user.first_name|first}} {{actt.user.surname|first}}</p>
           </div>
         </div>
         
         <div class="row row-agent">
-          <div class="col-7">
+          <div class="col-podpisi" style="display: inline-block; width: 50%;">
             <p class="text-end">Главный инженер сервисного центра</p>
           </div>
-          <div class="col-3">
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
             <p class="text-end">_____________</p>
           </div>
-          <div class="col-2">
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
             <p class="text-start fst-italic text-decoration-underline">{{ leader.last_name }} {{ leader.first_name|first }} {{ leader.surname|first }}</p>
           </div>
         </div>
@@ -316,34 +337,36 @@
         <div class="starter-template text-center py-4 px-3"></div>
         
         <div class="row">
-          <div class="col-auto">
+          <div class="col-apodpisi">
             <p class="text-start">Представители учреждения /владельца:</p>
           </div>
         </div>
         
         <div class="row row-agent">
-          <div class="col-7">
-            <p class="text-end">__________________________________________</p>
+          <div class="col-podpisi" style="display: inline-block; width: 50%;">
+            <p class="text-end">____________________________________</p>
           </div>
-          <div class="col-3">
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
             <p class="text-end">_____________</p>
           </div>
-          <div class="col-2">
-            <p class="text-start">_____________________</p>
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
+            <p class="text-start">_______________</p>
           </div>
         </div>
         
         <div class="row row-agent">
-          <div class="col-7">
-            <p class="text-end">__________________________________________</p>
+          <div class="col-podpisi" style="display: inline-block; width: 50%;">
+            <p class="text-end">____________________________________</p>
           </div>
-          <div class="col-3">
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
             <p class="text-end">_____________</p>
           </div>
-          <div class="col-2">
-            <p class="text-start">_____________________</p>
+          <div class="col-podpisi" style="display: inline-block; width: 20%;">
+            <p class="text-start">_______________</p>
           </div>
         </div>
       </div>
+</div>
+</div>
 </body>
 </html>

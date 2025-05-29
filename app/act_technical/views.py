@@ -18,6 +18,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import os
 import json
+import pdfkit
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.decorators.http import require_http_methods
@@ -242,27 +243,27 @@ def export_act_pdf(request, pk):
     
     template = get_template('act_technical/act_pdf.html')
     html = template.render(context)
-    
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="act_{act.id}.pdf"'
-    
-    # Генерация PDF с обработкой ошибок
-    try:
-        pisa_status = pisa.CreatePDF(
-            html,
-            dest=response,
-            encoding='UTF-8',
-            link_callback=link_callback
-        )
-        
-        if pisa_status.err:
-            return HttpResponse(f"Ошибка генерации PDF: {pisa_status.err}", status=400)
-            
-    except Exception as e:
-        return HttpResponse(f"Ошибка: {str(e)}", status=500)
-    
-    return response
 
+    options = {
+          'page-size': 'A4',
+          'encoding': "UTF-8",
+          'enable-local-file-access': '',
+       }
+    try:
+    # Пробуем использовать wkhtmltopdf из PATH
+        config = pdfkit.configuration()
+    except OSError:
+    # Если не найден, указываем альтернативный путь
+        config = pdfkit.configuration(
+        wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    )
+
+
+    pdf = pdfkit.from_string(html, False, configuration=config, options=options)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{act.name}.pdf"'
+    return response
+    
 
 
 @login_required
